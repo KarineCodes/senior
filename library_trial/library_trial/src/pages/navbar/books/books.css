@@ -1,0 +1,67 @@
+/* Add this CSS to your existing stylesheet */
+
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4; /* Light gray background */
+  }
+  
+  .App {
+    text-align: center;
+    margin: 20px;
+  }
+  
+  .log-out-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #3c78e7; /* Red background color */
+    color: #fff; /* White text color */
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .log-out-btn:hover {
+    background-color: #0eac9e; /* Darker red on hover */
+  }
+/*   
+  h1 {
+    color: #22aeb8; /* Green title text color */
+    /* margin-bottom: 20px; */
+  /* }  */
+  
+  input[type="number"] {
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ccc; /* Light gray border */
+  }
+  
+  center {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .book-container {
+    width: 15em;
+    background-color: #CD8FFD;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Light shadow */
+  }
+  
+  .book-name {
+    font-size: 20px;
+    color: #fff; /* White text color */
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .book-container {
+      width: 100%;
+    }
+  }
+  

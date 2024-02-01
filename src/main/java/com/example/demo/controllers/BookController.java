@@ -1,5 +1,7 @@
 package com.example.demo.controllers;
 
+import java.util.Collections;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +56,18 @@ public class BookController {
 		return ResponseEntity.notFound().build();
 	}
 	
+	@GetMapping(value = "/reservedBooks", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Iterable<Book>> getReservedBook(){
+		
+        Iterable<Book> reservedBooks = bookRepository.findByIsReserved(true);
+        
+		if (reservedBooks != null) {
+		    return ResponseEntity.ok(reservedBooks);
+		}
+		return ResponseEntity.ok(Collections.emptyList());
+
+	}
+	
 	@PostMapping(value = "/book")
 	public ResponseEntity<Book> createBook(@RequestBody BookDto bookDto) {
 		Book book = BookUtils.extract(bookDto);
@@ -71,6 +85,21 @@ public class BookController {
 		if(book != null)
 		{
 			book.isReserved = true;
+			bookRepository.save(book);
+			return ResponseEntity.ok(book);
+		}
+		return ResponseEntity.notFound().build();
+	}
+	
+	@PatchMapping(value = "/book/removeReserve/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Book> removeReserveBook(@PathVariable String id){
+		
+		long id_long = Integer.parseInt(id);
+		var book = bookRepository.findById(id_long).orElse(null);
+
+		if(book != null)
+		{
+			book.isReserved = false;
 			bookRepository.save(book);
 			return ResponseEntity.ok(book);
 		}

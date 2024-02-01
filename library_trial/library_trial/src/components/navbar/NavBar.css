@@ -1,0 +1,132 @@
+
+.navbar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 75px;
+    background-color: #3498db; /* Blue background color */
+    color: #fff; /* White text color */
+    padding: 0 20px; /* Add padding for better spacing */
+    box-sizing: border-box;
+    border-bottom: 3px solid #2980b9; /* Darker blue border bottom */
+  }
+  
+  .navbar-brand {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .nav-links {
+    display: flex;
+  }
+  .nav-linkk {
+    display: flex;
+    color: rgb(107, 241, 219);
+  }
+  
+  .nav-links a {
+    text-decoration: none;
+    color: #fff;
+    margin: 0 15px; /* Add spacing between links */
+    transition: color 0.3s; /* Smooth transition for color change */
+  }
+  
+  .nav-links a:hover {
+    color: #ffd700; /* Change color on hover to gold */
+  }
+  
+  .nav-links a.active {
+    color: #ffd700; /* Active link color */
+  }
+  
+  .log-out-btn,
+  .log-in-btn {
+    padding: 10px 20px; /* Padding for buttons */
+    margin-left: 15px; /* Add margin between buttons */
+    border-radius: 5px; /* Rounded corners for buttons */
+    cursor: pointer; /* Show pointer on hover */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for button color change */
+  }
+  
+  .log-out-btn:hover,
+  .log-in-btn:hover {
+    background-color: #2b71c0; /* Darker red on hover */
+    color: #fff; /* White text color on hover */
+  }
+  
+/* .navbar-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    justify-content: flex-start;
+    width: 100%;
+    font-size: 16px;
+    box-sizing: border-box;
+    margin: 0;
+    background-color:cornflowerblue;
+    color: #fff;
+    height: 75px;
+    border: 3px solid #bbb;
+    }
+
+
+.icon{
+    width: 40px;
+    height: 40px;
+    padding-top: 20px;
+    object-fit: contain;
+    
+}
+
+.nav-link{
+    font-weight: bold;
+    height: 1px;
+    width: 1px;
+    font-size: 16px;
+    margin-bottom: 10%;
+    margin-top: 10%;
+    margin-right: 5%;
+    margin-left: 5%;
+    color:aliceblue;
+    display: flex;
+}
+
+
+.nav-link-login{
+    font-weight: bold;
+    height: 1px;
+    width: 1px;
+    font-size: 16px;
+    
+    color:rgb(20, 58, 92);
+    display: flex;
+    justify-self: flex-end;
+    margin-left: 800px;
+}
+
+.log-out-btn{
+    padding: 10px;
+    width: 80px;
+    height: 5px;
+    border: 1px solid #ececec;
+    margin-left: 50px;
+    padding-bottom: 50px;
+    background-color:black;
+    color:white;
+    text-align: center;
+    display: flex;
+}
+.log-in-btn{
+    padding: 10px;
+    width: 80px;
+    height: 5px;
+    border: 1px solid #ececec;
+    margin-left: 900px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    padding-bottom: 50px;
+    background-color:black;
+    color:white;
+    text-align: center;
+} */
