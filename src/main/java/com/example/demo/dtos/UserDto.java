@@ -7,6 +7,7 @@ import com.example.demo.entities.Genre;
 
 public class UserDto {
 	
+	public long id;
 	public String firstName;
 	public String lastName;
 	public String age;
