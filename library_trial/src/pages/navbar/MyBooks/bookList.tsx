@@ -121,24 +121,43 @@ interface Book {
   }, []);
 
   return (
-    <div>
-      <button className="log-out-btn" onClick={()=>logOutHandler()}>Log Out</button>
-    <div className="book-list">
-      {books.map((book) => (
-        <div key={book.id} className="book">
-          <div><h4>{book.name}</h4></div>
-          <div><img src={book.imageUrl} alt="#" onClick={() => navigate(`/books/${book.id}`)} /></div>
-          <div>
-            {favoritesChecker(book.id) ? (
-              <button className="button-fav" onClick={() => {removeFromReserved(book.id),handleUndoReserve(book.id)}}>Undo Reserve</button>
-            ) : (
-              <button className="button-fav" onClick={() => {addToReserved(book),handleApiCall(book.id)}}>Reserve</button>
-            )}
+<>
+      <div className="book-list">
+        {books.map((book) => (
+          <div key={book.id} className="book">
+            <div>
+              <h4>{book.name}</h4>
+            </div>
+            <div>
+              <img src={book.imageUrl} alt="#" onClick={() => navigate(`/books/${book.id}`)} />
+            </div>
+            <div>
+              {favoritesChecker(book.id) ? (
+                <button
+                  className="button-fav"
+                  onClick={() => {
+                    removeFromReserved(book.id);
+                    handleUndoReserve(book.id);
+                  }}
+                >
+                  Undo Reserve
+                </button>
+              ) : (
+                <button
+                  className="button-fav"
+                  onClick={() => {
+                    addToReserved(book);
+                    handleApiCall(book.id);
+                  }}
+                >
+                  Reserve
+                </button>
+              )}
+            </div>
           </div>
-        </div>
-      ))}
-    </div>
-    </div>
+        ))}
+      </div>
+    </>
   );
 }
 

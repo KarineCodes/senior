@@ -5,12 +5,14 @@ import About from "./pages/navbar/about/about";
 import Home from "./pages/navbar/home/home";
 // import Books from "./pages/navbar/books/books";
 import { useState } from "react";
+import Footer from "./components/navbar/Footer";
 import NavBar2 from "./components/navbar/navBar2";
 import BookDetails from "./pages/navbar/MyBooks/BookDetails";
 import Favorites from "./pages/navbar/MyBooks/Favorites";
 import BookList from "./pages/navbar/MyBooks/bookList";
 import Contact from "./pages/navbar/contact/contact";
 import Login from "./pages/navbar/login/login";
+import Register from "./pages/navbar/login/register";
 
 
 function App() {
@@ -34,6 +36,9 @@ function App() {
         </Route>
 
         <Route path="/contact" element={<Contact />}>
+        </Route>
+
+        <Route path="/register" element={<Register/>}>
         </Route>
         
 
@@ -62,6 +67,7 @@ function App() {
       </div>
       </main>
       </BrowserRouter>
+      <Footer/>
     </>
   )
 }

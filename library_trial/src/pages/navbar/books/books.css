@@ -17,7 +17,7 @@ body {
     border: none;
     border-radius: 5px;
     background-color: #3c78e7; /* Red background color */
-    color: #fff; /* White text color */
+    color: #065d47; /* White text color */
     cursor: pointer;
     transition: background-color 0.3s;
   }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 
 import "./NavBar.css";
@@ -9,12 +9,32 @@ import "./NavBar.css";
   
   const NavBar2: React.FC<NavBar2Props> = ({ setToken }) => {
 
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    useEffect(() => {
+      const handleScroll = () => {
+        const scrollPosition = window.scrollY;
+        // Set a threshold value as needed
+        const scrollThreshold = 100;
+  
+        setIsScrolled(scrollPosition > scrollThreshold);
+      };
+  
+      // Attach the event listener when the component mounts
+      window.addEventListener("scroll", handleScroll);
+  
+      // Clean up the event listener when the component unmounts
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+      };
+    }, []);
+    
   const logOutHandler = () => {
     setToken("");
     localStorage.clear();
   }
     return(
-      <nav className="navbar-container">
+      <nav className={`navbar-container`}>
       {/* <FaSchool className="icon"></FaSchool> */}
       <NavLink to="/" className="nav-linkk">
         Home
@@ -42,8 +62,14 @@ import "./NavBar.css";
         Books
         </NavLink> */}
         
-        <NavLink to="/login" className="log-in-btn">
-        <button className="log-in-btn" >Log In</button>
+        {/* <div className="log-out-btn-container">
+        <button className="log-out-btn" onClick={() => logOutHandler()}>
+          Log Out
+        </button>
+      </div> */}
+
+        <NavLink to="/logout" className="log-out-btn-container">
+        <button className="log-out-btn" onClick={()=>logOutHandler()}>Log Out</button>
         </NavLink>
 
         {/* <button className="log-out-btn" onClick={()=>logOutHandler()}>Log Out</button> */}

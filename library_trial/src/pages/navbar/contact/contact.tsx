@@ -1,5 +1,5 @@
-import { useState } from "react"
-import"./contact.css"
+import { useState } from "react";
+import "./contact.css";
 
 export function Contact() {
     const[data, setData] = useState({name:"", email:"", phone:"", message:""});
@@ -15,7 +15,7 @@ export function Contact() {
     return (
         <div>
             {/* <form method="post" onSubmit="sendEmail()"></form> */}
-            <img src="src/pages/navbar/contact/contactImage.jpg" alt="Side Image" className="side-image" />
+            {/* <img src="src/pages/navbar/contact/contactImage.jpg" alt="Side Image" className="side-image" /> */}
         <form action="https://formsubmit.co/sayeghnatalie34@gmail.com" method="POST">
             <h1>CONTACT <span>HERE!</span></h1>
             <input type="text" name="name" id="" onChange={handleChange} value={data.name} placeholder="enter name" required/>

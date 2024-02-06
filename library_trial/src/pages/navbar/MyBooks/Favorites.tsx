@@ -33,8 +33,7 @@ const logOutHandler = () => {
   };
 
   return (
-    <div>
-      <button className="log-out-btn" onClick={()=>logOutHandler()}>Log Out</button>
+    <div className="favorites-container">
     <div className="favorites">
       {Object.keys(reserved).length > 0 ? (
         Object.keys(reserved).map((id) => {

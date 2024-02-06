@@ -1,9 +1,17 @@
+.div{
+  padding-top: 1000px;
+}
+
 .book-list{
     min-height: 90vh;
     width: 100%;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     justify-items: center;
+}
+
+.favorites-container{
+  padding-top: 70px;;
 }
 
 .favorites{

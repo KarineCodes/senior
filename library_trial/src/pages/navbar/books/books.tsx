@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { getAllBooksRequest, getPostByIdRequest } from '../../../store/thunks/booksThunk';
+import { useDispatch, useSelector } from 'react-redux';
 import { bookselector } from '../../../store/selectors/booksSelector';
 import { RootState } from '../../../store/store';
+import { getAllBooksRequest, getPostByIdRequest } from '../../../store/thunks/booksThunk';
 
-import "./books.css"
-import"../../../components/navbar/NavBar.css"
+import "../../../components/navbar/NavBar.css";
+import "./books.css";
 interface BookProps {
   setToken: React.Dispatch<React.SetStateAction<string|null>>;
 }
@@ -38,12 +38,10 @@ const logOutHandler = () => {
   const handleSearch = (event: any) => {
     
   setInputText(event.target.value);
-    };  
-    
+    };
     
     return (
     <div className="App">
-
       <button className="log-out-btn" onClick={()=>logOutHandler()}>Log Out</button>
       <h1 style={{ color: "green" }}>Using Axios Library to Fetch Data</h1>
       <input
