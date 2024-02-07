@@ -1,6 +1,10 @@
 package com.example.demo.controllers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,12 +39,29 @@ public class UserController {
         return id;
     }
 
-    @PostMapping(path = "/login")
-    public ResponseEntity<?> loginEmployee(@RequestBody LoginDto loginDto) {
+    // @PostMapping(path = "/login")
+    // public ResponseEntity<?> loginEmployee(@RequestBody LoginDto loginDto) {
         
+    //     LoginMessage loginResponse = userService.loginUser(loginDto);
+    //     return ResponseEntity.ok(loginResponse);
+    // }
+
+    @PostMapping(path = "/login")
+public ResponseEntity<?> loginEmployee(@RequestBody LoginDto loginDto) {
+    User user = userRepository.findByEmail(loginDto.email);
+    // Check if the user exists
+    if (userService.userExists(loginDto)) {
         LoginMessage loginResponse = userService.loginUser(loginDto);
+        Map<String, Object> response = new HashMap<>();
+        response.put("user", user);
+        response.put("loginResponse", loginResponse);
         return ResponseEntity.ok(loginResponse);
+    } else {
+        // User not found, return an appropriate response
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
     }
+}
+
     
     @GetMapping(path = "/getUser")
     public ResponseEntity<Iterable<User>> getUsers() {

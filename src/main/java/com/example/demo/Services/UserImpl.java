@@ -62,4 +62,30 @@ public class UserImpl implements UserService {
 
     }
     
+    @Override
+    public Boolean userExists(LoginDto loginDto)
+    {
+        String msg = "";
+        User user = userRepo.findByEmail(loginDto.email);
+        if(user != null)
+        {
+            String password = loginDto.password;
+            String encodePassword = user.password;
+            Boolean isPwdRight = passwordEncoder.matches(password, encodePassword);
+            if(isPwdRight){
+                User user1 = userRepo.findOneByEmailAndPassword(loginDto.email, encodePassword);
+                if(user != null)
+                {
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }
+            else{
+                return false;
+            }
+    }
+        return null;
+}
 }

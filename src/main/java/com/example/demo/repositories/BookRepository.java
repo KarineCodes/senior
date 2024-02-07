@@ -11,4 +11,5 @@ import com.example.demo.entities.Book;
 public interface BookRepository extends CrudRepository<Book, Long>{
 
 	public List<Book> findByIsReserved(boolean isReserved);
+	public List<Book> findByDescription(String description);
 }

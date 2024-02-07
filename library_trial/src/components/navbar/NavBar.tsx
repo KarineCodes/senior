@@ -109,11 +109,8 @@ const NavBar: React.FC<NavBarProps> = ({ setToken }) => {
 
   return (
     <nav className={`navbar-container`}>
-      <NavLink to="/" className="nav-linkk">
+      <NavLink to="/home" className="nav-linkk">
         Home
-      </NavLink>
-      <NavLink to="/about" className="nav-linkk">
-        About
       </NavLink>
       <NavLink to="/contact" className="nav-linkk">
         Contact

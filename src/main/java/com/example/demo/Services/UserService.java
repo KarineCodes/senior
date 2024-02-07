@@ -8,4 +8,5 @@ import com.example.demo.payloadResponse.LoginMessage;
 public interface UserService {
     String addUser(UserDto userDto);
     LoginMessage loginUser(LoginDto loginDto);
+    Boolean userExists(LoginDto loginDto);
 }

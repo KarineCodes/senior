@@ -1,53 +1,73 @@
 import axios from 'axios';
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import './login.css';
 
-// export function Login({ token, setToken }) {
-
 interface LoginProps {
-  token: string|null;
-  setToken: React.Dispatch<React.SetStateAction<string|null>>;
+  token: string | null;
+  setToken: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const Login: React.FC<LoginProps> = ({ token, setToken }) => {
-// const Login = ({ token, setToken }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const loginHandler = () => {
     setError("");
     setPassword("");
     setEmail("");
 
-  axios({
-    url:"http://localhost:8081/api/v1/user/login",
-    method:"POST",
-    data:{
-      email: email,
-      password: password,
-    },
-  }).then((res) => {
-    console.log(res.data.token);
-    setToken(res.data.token);
-    localStorage.setItem("userToken", res.data.token);
-  }).catch((err) => {
-    console.log(err.response);
-    setError(err.response.data);
-  });
+    axios({
+      url: "http://localhost:8081/api/v1/user/login",
+      method: "POST",
+      data: {
+        email: email,
+        password: password,
+      },
+    })
+      .then((res) => {
+        console.log(res.data.token);
+        setToken(res.data.token);
+        localStorage.setItem("userToken", res.data.token);
+        navigate('/bookList');
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log(err.response);
+        if (err.response.status === 401) {
+          setError("Invalid credentials");
+        } else {
+          setError("An error occurred during login");
+        }
+      });
   };
-    return <div className='login'>
+
+  return (
+    <div className='login'>
       <div className='login-inputs'>
-        <input value={email} onChange={(e)=>setEmail(e.target.value)} type="text" placeholder='Email'/>
-        <input value={password} onChange={(e)=>setPassword(e.target.value)} type='password' placeholder='Password'/>
+        <input
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          type="text"
+          placeholder='Email'
+        />
+        <input
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          type='password'
+          placeholder='Password'
+        />
         {error && <small>{error}</small>}
-        <button onClick={ () =>loginHandler()}>login</button>
+        <button onClick={() => loginHandler()}>Login</button>
       </div>
-    </div>;
-  };
-  
-  
-export default Login
+    </div>
+  );
+};
+
+export default Login;
+
 
 // import axios from "axios";
 // import { ChangeEvent, FormEvent, useState } from "react";

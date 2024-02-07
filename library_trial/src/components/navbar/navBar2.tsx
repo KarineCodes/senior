@@ -16,7 +16,6 @@ import "./NavBar.css";
         const scrollPosition = window.scrollY;
         // Set a threshold value as needed
         const scrollThreshold = 100;
-  
         setIsScrolled(scrollPosition > scrollThreshold);
       };
   
@@ -39,9 +38,6 @@ import "./NavBar.css";
       <NavLink to="/" className="nav-linkk">
         Home
       </NavLink>
-      <NavLink to="/about" className="nav-linkk">
-        About
-        </NavLink>
         <NavLink to="/contact" className="nav-linkk">
         Contact
         </NavLink>
