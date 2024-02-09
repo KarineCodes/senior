@@ -12,10 +12,6 @@ interface BookProps {
 
 const Books: React.FC<BookProps> = ({ setToken }) => {
 
-const logOutHandler = () => {
-  setToken("");
-  localStorage.clear();
-}
 // export function Books() {
   const dispatch = useDispatch<any>();
   const books = useSelector((state: RootState) => bookselector(state));
@@ -42,7 +38,6 @@ const logOutHandler = () => {
     
     return (
     <div className="App">
-      <button className="log-out-btn" onClick={()=>logOutHandler()}>Log Out</button>
       <h1 style={{ color: "green" }}>Using Axios Library to Fetch Data</h1>
       <input
           type="number"

@@ -19,7 +19,7 @@ const Home: React.FC = () => {
           Explore our vast collection of books and discover your next favorite
           read!
         </p>
-        <button className="home-button" onClick={() => navigate(`/contact/`)}> Discover more!</button>
+        <button className="home-button" onClick={() => navigate(`/BookList/`)}> Discover more!</button>
       </div>
       <img src={imageSrc} alt="Book Library" className="home-image" />
     </div>

@@ -53,7 +53,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import "./MyBooks.css";
 import { API_URL } from "./api";
-import { useAppContext } from "./context/appContext";
 
 
 interface Book {
@@ -66,50 +65,13 @@ interface Book {
   interface BookProps {
     setToken: React.Dispatch<React.SetStateAction<string|null>>;
   }
-  
-  const BookList: React.FC<BookProps> = ({ setToken }) => {
-  
-  const logOutHandler = () => {
-    setToken("");
-    localStorage.clear();
-  }
+  const BookList: React.FC<BookProps> = () => {
 
   // 
 // export function BookList() {
   const [books, setBooks] = useState<Book[]>([]);
-  const { reserved, addToReserved, removeFromReserved } = useAppContext() || { reserved: [], addToReserved: () => {}, removeFromReserved: () => {} };
 
   const navigate = useNavigate();
-
-  const favoritesChecker = (id: string) => {
-    return Object.keys(reserved).some((bookId) => bookId === id);
-  };
-
-    const handleApiCall = async (bookId: string) => {
-    try {
-      const response = await fetch(`http://localhost:8081/book/reserve/${bookId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        } catch (error) {
-      console.error('API Error:', error);
-    }
-  };
-
-  const handleUndoReserve = async (bookId: string) => {
-    try {
-      const response = await fetch(`http://localhost:8081/book/removeReserve/${bookId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        } catch (error) {
-      console.error('API Error:', error);
-    }
-  };
 
   useEffect(() => {
     axios.get(API_URL)
@@ -131,29 +93,7 @@ interface Book {
             <div>
               <img src={book.imageUrl} alt="#" onClick={() => navigate(`/books/${book.id}`)} />
             </div>
-            <div>
-              {favoritesChecker(book.id) ? (
-                <button
-                  className="button-fav"
-                  onClick={() => {
-                    removeFromReserved(book.id);
-                    handleUndoReserve(book.id);
-                  }}
-                >
-                  Undo Reserve
-                </button>
-              ) : (
-                <button
-                  className="button-fav"
-                  onClick={() => {
-                    addToReserved(book);
-                    handleApiCall(book.id);
-                  }}
-                >
-                  Reserve
-                </button>
-              )}
-            </div>
+
           </div>
         ))}
       </div>

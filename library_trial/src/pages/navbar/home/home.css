@@ -35,11 +35,19 @@
     align-self: right;
   }
    
-  .home-button{
-    text-decoration:solid;
-    border-style:dotted bold;
+  .home-button {
+    text-decoration: solid;
+    border-style: dotted bold;
     border: solid;
-  }
+    color: rgb(26, 132, 128);
+    transition: background-color 0.3s ease; /* Add a transition for smoother effect */
+
+}
+
+.home-button:hover {
+    background-color: rgba(255, 255, 255, 0.5); /* Adjust the alpha (last) value for transparency */
+}
+
 
   /*  */
 

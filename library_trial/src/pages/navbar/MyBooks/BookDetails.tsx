@@ -1,16 +1,17 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import "./MyBooks.css";
 import { BOOK_DETAILS_URL } from "./api";
+import { useAppContext } from "./context/appContext";
+import { useAuth } from "./context/authContext";
 
 interface Book {
-  id: number;
+  id: string;
   name: string;
   imageUrl: string;
   description: string;
-  authors: string[];
-  genres: string[];
+  [key: string]: any; // String index signature
 }
 
 export function BookDetails() {
@@ -18,14 +19,47 @@ export function BookDetails() {
   const { id } = useParams();
   const [isClicked, setIsClicked] = useState(false); // Track if the book is clicked
   const [isOpen, setIsOpen] = useState(false);
+  const { reserved, addToReserved, removeFromReserved } = useAppContext() || { reserved: [], addToReserved: () => {}, removeFromReserved: () => {} };
+  const favoritesChecker = (id: string) => {
+    return Object.keys(reserved).some((bookId) => bookId === id);
+  };
+
+  const { isLoggedIn } =   useAuth();
 
   const toggleDescription = () => {
     setIsOpen(!isOpen);
     setIsClicked(true); // Set the book as clicked
   };
 
+  const handleApiCall = async (bookId: string) => {
+    try {
+      const response = await fetch(`http://localhost:8081/book/reserve/${bookId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    } catch (error) {
+      console.error('API Error:', error);
+    }
+  };
+
+  const handleUndoReserve = async (bookId: string) => {
+    try {
+      const response = await fetch(`http://localhost:8081/book/removeReserve/${bookId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    } catch (error) {
+      console.error('API Error:', error);
+    }
+  };
+
   useEffect(() => {
-    axios.get(`${BOOK_DETAILS_URL}/${id}`)
+    axios
+      .get(`${BOOK_DETAILS_URL}/${id}`)
       .then((res) => {
         setBook(res.data);
       })
@@ -35,53 +69,52 @@ export function BookDetails() {
   if (!book) {
     return <div>Loading...</div>;
   }
-  const renderPages = () => {
-    const pages = [];
-    for (let i = 1; i <= 32; i++) {
-      pages.push(<span key={i} className={`page page-${i}`}></span>);
-    }
-    return pages;
-  };
 
   return (
-    <div className={`book-details ${isOpen ? 'open' : ''}`} onClick={toggleDescription}>
-      <div className="book-image" >
-        <h2>{book.name}</h2>
-        <img src={book.imageUrl} alt="#" />
-      </div>
-        <div className="book-description">
-            <span className="page turn"></span>
-  <span className="page turn"></span>
-  <span className="cover"></span>
-  <span className="page"></span>
-  <span className="page"></span>
-  <span className="page">{book.description}</span>
-  <span className="page"></span>
-  <span className="page"></span>
-  <span className="page"></span>
-  <span className="cover turn"></span>
+    <div>
+      <div className={`book-details ${isOpen ? 'open' : ''}`} onClick={toggleDescription}>
+      <Link to="/bookList" className="back-arrow">&#8592;</Link>
+        <div id="bookCont" className="bookCont">
+          <div className="cover">
+            <img src={book.imageUrl} alt={book.name} />
+          </div>
+          <div className="page">
+            <h2>{book.name}</h2>
+          </div>
+          <div className="page">
+            <p>{book.description}</p>
+          </div>
         </div>
-      
+        <div className="buttons">
+          {isLoggedIn ? (
+            favoritesChecker(book.id) ? (
+              <button
+                className="button-fav"
+                onClick={() => {
+                  removeFromReserved(book.id);
+                  handleUndoReserve(book.id);
+                }}
+              >
+                Undo Reserve
+              </button>
+            ) : (
+              <button
+                className="button-fav"
+                onClick={() => {
+                  addToReserved(book);
+                  handleApiCall(book.id);
+                }}
+              >
+                Reserve
+              </button>
+            )
+          ) : (
+            <p>Please log in to reserve this book.</p>
+          )}
+        </div>
+      </div>
     </div>
-    );
-  
-  // return (
-  //   <div className={`book-details ${isOpen ? 'open' : ''}`} onClick={toggleDescription}>
-  //     <div className="book">
-  //       <div className="cover">
-  //         <img src={book.imageUrl} alt="#" />
-  //       </div>
-  //       <div className={`page turn ${isOpen ? 'open' : ''}`}></div>
-  //     </div>
-  //     {isOpen && (
-  //       <div className="book-description">
-  //         <h2>Description</h2>
-  //         <p>{book.description}</p>
-  //       </div>
-  //     )}
-  //   </div>
-  // );
-
+  );
 }
 
 export default BookDetails;
