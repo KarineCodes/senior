@@ -24,6 +24,18 @@ const logOutHandler = () => {
   setToken("");
   localStorage.clear();
 }
+const handleUndoReserve = async (bookId: string) => {
+  try {
+    const response = await fetch(`http://localhost:8081/book/removeReserve/${bookId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  } catch (error) {
+    console.error('API Error:', error);
+  }
+};
 
 // export function Reserve() {
   const { reserved, addToReserved, removeFromReserved } = useAppContext()!;
@@ -50,7 +62,7 @@ const logOutHandler = () => {
                 {reservedChecker(book.id) ? (
                   <button
                     className="button-fav"
-                    onClick={() => removeFromReserved(book.id)}
+                    onClick={() => {removeFromReserved(book.id); handleUndoReserve(book.id);}}
                   >
                     Undo Reserve
                   </button>

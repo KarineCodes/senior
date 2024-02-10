@@ -12,9 +12,9 @@
 }
 
 .book-list {
-  min-height: 90vh;
-  width: 90%;
-  margin-left: 60px;
+  min-height: 100px;
+  width: 80%;
+  margin-left: 125px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   justify-items: center;
@@ -320,3 +320,27 @@ body {
   width: 400px;
 }
 
+.navbar-form {
+  margin-top: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: 250px;
+  width:800px;
+  height: 40px;
+}
+
+.navbar-form input {
+  margin-right: 10px;
+  padding: 5px; /* Adjust padding to control the height of the input */
+  width: 9000px; /* Set the desired width of the input */
+  font-size: 14px; /* Set the font size */
+  height: 40px;
+}
+
+.navbar-form button {
+  padding: 5px 10px; /* Adjust padding to control the size of the button */
+  font-size: 14px; /* Set the font size */
+  width: 150px;
+  height: 35px;
+}

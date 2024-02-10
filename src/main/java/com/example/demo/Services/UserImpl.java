@@ -35,29 +35,22 @@ public class UserImpl implements UserService {
     @Override
     public LoginMessage loginUser(LoginDto loginDto)
     {
-        String msg = "";
         User user = userRepo.findByEmail(loginDto.email);
         if(user != null)
         {
             String password = loginDto.password;
             String encodePassword = user.password;
             Boolean isPwdRight = passwordEncoder.matches(password, encodePassword);
+            
             if(isPwdRight){
-                User user1 = userRepo.findOneByEmailAndPassword(loginDto.email, encodePassword);
-                if(user != null)
-                {
-                    return new LoginMessage("Login Success", true);
-                }
-                else{
-                    return new LoginMessage("Login Failed", false);
-                }
+                return new LoginMessage("Login Success", true, user.id);
             }
             else{
-                return new LoginMessage("password does not match",false);
+                return new LoginMessage("password does not match",false, (Long) null);
             }
         }
         else{
-            return new LoginMessage("Email not exits",false);
+            return new LoginMessage("Email not exits",false, (Long) null);
         }
 
     }
@@ -65,22 +58,15 @@ public class UserImpl implements UserService {
     @Override
     public Boolean userExists(LoginDto loginDto)
     {
-        String msg = "";
         User user = userRepo.findByEmail(loginDto.email);
         if(user != null)
         {
             String password = loginDto.password;
             String encodePassword = user.password;
             Boolean isPwdRight = passwordEncoder.matches(password, encodePassword);
+           
             if(isPwdRight){
-                User user1 = userRepo.findOneByEmailAndPassword(loginDto.email, encodePassword);
-                if(user != null)
-                {
-                    return true;
-                }
-                else{
-                    return false;
-                }
+                return true;
             }
             else{
                 return false;

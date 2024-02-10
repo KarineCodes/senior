@@ -39,6 +39,9 @@ export function BookDetails() {
           'Content-Type': 'application/json',
         },
       });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
     } catch (error) {
       console.error('API Error:', error);
     }
@@ -101,8 +104,11 @@ export function BookDetails() {
               <button
                 className="button-fav"
                 onClick={() => {
-                  addToReserved(book);
-                  handleApiCall(book.id);
+                  if (book) {
+                    console.log("Book ID:", book.id);
+                    addToReserved(book);
+                    handleApiCall(book.id);
+                  }
                 }}
               >
                 Reserve

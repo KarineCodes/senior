@@ -26,7 +26,9 @@ import com.example.demo.repositories.UserRepository;
 @CrossOrigin(origins = "http://localhost:5173", maxAge = 3600)
 @RequestMapping("api/v1/user")
 public class UserController {
-    
+
+    private static long user_id;
+
     @Autowired
     private UserService userService;
 
@@ -55,6 +57,7 @@ public ResponseEntity<?> loginEmployee(@RequestBody LoginDto loginDto) {
         Map<String, Object> response = new HashMap<>();
         response.put("user", user);
         response.put("loginResponse", loginResponse);
+        user_id = user.id;
         return ResponseEntity.ok(loginResponse);
     } else {
         // User not found, return an appropriate response
@@ -80,6 +83,10 @@ public ResponseEntity<?> handleOptions() {
     return ResponseEntity.ok().build();
 }
 
+public static long getUserId() {
+    // Your logic to get or calculate the userId
+    return user_id;
+}
     
 
 }

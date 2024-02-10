@@ -1,58 +1,7 @@
-// import React, { createContext, ReactNode, useState } from "react";
-
-// interface Book {
-//   id: string;
-//   title: string;
-//   image_url: string;
-// }
-
-// interface Favorites {
-//   [key: string]: Book;
-// }
-
-// interface ContextProps {
-//   favorites: Favorites;
-//   addToFavorites: (book: Book) => void; // Adjust parameter type to Book
-//   removeFromFavorites: (id: string) => void;
-// }
-
-// const AppContext = createContext<ContextProps | null>(null);
-
-// interface AppContextProviderProps {
-//   children: ReactNode;
-// }
-
-// const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => {
-//   const [favorites, setFavorites] = useState<Favorites>({});
-
-//   const addToFavorites = (book: Book) => { // Adjust parameter type to Book
-//     setFavorites((prevFavorites) => ({
-//       ...prevFavorites,
-//       [book.id]: book,
-//     }));
-//   };
-
-//   const removeFromFavorites = (id: string) => {
-//     setFavorites((prevFavorites) => {
-//       const newFavorites = { ...prevFavorites };
-//       delete newFavorites[id];
-//       return newFavorites;
-//     });
-//   };
-
-//   return (
-//     <AppContext.Provider value={{ favorites, addToFavorites, removeFromFavorites }}>
-//       {children}
-//     </AppContext.Provider>
-//   );
-// };
-
-// export { AppContext, AppContextProvider };
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import "./MyBooks.css";
-import { API_URL } from "./api";
 
 
 interface Book {
@@ -70,20 +19,37 @@ interface Book {
   // 
 // export function BookList() {
   const [books, setBooks] = useState<Book[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(API_URL)
-      .then(res => {
-        console.log(res.data);
-        setBooks(res.data);
-      })
-      .catch(err => console.log(err));
-  }, []);
+    const fetchBooks = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8081/book/searchByName?name=${searchQuery}`);
+        setBooks(response.data);
+      } catch (error) {
+        console.error('API Error:', error);
+      }
+    };
+
+    fetchBooks();
+  }, [searchQuery]);
+  
 
   return (
 <>
+<div className="navbar-form">
+      <input
+        type="text"
+        placeholder="Search books..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
+      <button type="submit" name="submit" className="btn btn-default">
+            <span className="glyphicon glyphicon-search"></span>
+      </button>
+    </div>
       <div className="book-list">
         {books.map((book) => (
           <div key={book.id} className="book">
