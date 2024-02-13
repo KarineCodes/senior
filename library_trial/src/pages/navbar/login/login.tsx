@@ -28,9 +28,10 @@ const Login: React.FC<LoginProps> = () => {
     })
       .then((res) => {
         console.log('Before calling login function'); // Add this line
-        login(res.data.token);
+        login(res.data.token,res.data.id);
         console.log('After calling login function'); // Add this line
         localStorage.setItem("userToken", res.data.token);
+        localStorage.setItem("userId", res.data.id);
         navigate('/bookList');
         window.location.reload();
       })

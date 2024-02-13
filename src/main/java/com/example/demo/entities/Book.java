@@ -1,6 +1,7 @@
 package com.example.demo.entities;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,7 +32,7 @@ public class Book {
 	public String description;
 	
 	@Column(name = "IssueDate")
-	public Date issueDate;
+	public LocalDate issueDate;
 	
 	@Column(name = "Author")
 	public String author;

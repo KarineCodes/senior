@@ -1,14 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
 
+import axios from "axios";
+import { NavLink } from "react-router-dom";
+import { useAuth } from "../../pages/navbar/MyBooks/context/authContext";
 import "./NavBar.css";
 // export function NavBar(){
   interface NavBar2Props {
     setToken: React.Dispatch<React.SetStateAction<string|null>>;
   }
   
-  const NavBar2: React.FC<NavBar2Props> = ({ setToken }) => {
+  interface User {
+    firstName:string;
+    lastName:string
+  }
 
+  const NavBar2: React.FC<NavBar2Props> = ({ setToken }) => {
+    const [user, setUser] = useState<User>();
+    const { userId, logout } = useAuth(); // Destructure userId and logout from the context
+    console.log("in navbar:",userId);
     const [isScrolled, setIsScrolled] = useState(false);
 
     useEffect(() => {
@@ -18,7 +27,22 @@ import "./NavBar.css";
         const scrollThreshold = 100;
         setIsScrolled(scrollPosition > scrollThreshold);
       };
-  
+      
+      axios
+      .get(`http://localhost:8081/api/v1/user/getUser/${userId}`)
+      .then((res) => {
+        setUser(res.data);
+      })
+      .catch((err) => console.log(err));
+
+      axios
+      .get(`http://localhost:8081/api/v1/user/getFullName/${userId}`)
+      .then((res) => {
+        userId === res.data.id;
+        console.log(res.data);
+      })
+      .catch((err) => console.log(err));
+      
       // Attach the event listener when the component mounts
       window.addEventListener("scroll", handleScroll);
   
@@ -26,9 +50,11 @@ import "./NavBar.css";
       return () => {
         window.removeEventListener("scroll", handleScroll);
       };
-    }, []);
+
+    }, [userId]);
     
   const logOutHandler = () => {
+    logout();
     setToken("");
     localStorage.clear();
   }
@@ -64,6 +90,8 @@ import "./NavBar.css";
         </button>
       </div> */}
 
+        <div className="user">
+          {user?.firstName} {user?.lastName}</div>
         <NavLink to="/logout" className="log-out-btn-container">
         <button className="log-out-btn" onClick={()=>logOutHandler()}>Log Out</button>
         </NavLink>

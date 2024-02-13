@@ -108,6 +108,7 @@ export function BookDetails() {
                     console.log("Book ID:", book.id);
                     addToReserved(book);
                     handleApiCall(book.id);
+                    console.log("reserved");
                   }
                 }}
               >

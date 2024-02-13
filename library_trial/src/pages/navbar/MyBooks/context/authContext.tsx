@@ -3,8 +3,9 @@ import { ReactNode, createContext, useContext, useEffect, useState } from 'react
 
 interface AuthContextType {
   isLoggedIn: boolean;
-  login: (token: string) => void;
+  login: (token: string, userId:string) => void;
   logout: () => void;
+  userId : string | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -15,29 +16,31 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isLoggedIn, setLoggedIn] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
     console.log('Effect: Checking token');
     const storedToken = localStorage.getItem('userToken');
-    if (storedToken) {
-      login(storedToken);
+    const storedUserId = localStorage.getItem('userId');
+    if (storedToken && storedUserId) {
+      login(storedToken, storedUserId);
     }
   }, []);
 
-  const login = (token: string) => {
+  const login = (token: string, userId: string) => {
     console.log('Login function called');
-    // In a real-world scenario, you would validate the token
-    // For simplicity, we'll just set isLoggedIn to true
+    setUserId(userId);
     setLoggedIn(true);
   };
 
   const logout = () => {
     // Log out the user
     setLoggedIn(false);
+    setUserId(null);
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, login, logout,userId }}>
       {children}
     </AuthContext.Provider>
   );

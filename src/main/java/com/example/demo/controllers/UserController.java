@@ -2,16 +2,19 @@ package com.example.demo.controllers;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.Services.UserService;
@@ -20,6 +23,7 @@ import com.example.demo.dtos.UserDto;
 import com.example.demo.entities.User;
 import com.example.demo.payloadResponse.LoginMessage;
 import com.example.demo.repositories.UserRepository;
+
 
 
 @RestController
@@ -58,6 +62,7 @@ public ResponseEntity<?> loginEmployee(@RequestBody LoginDto loginDto) {
         response.put("user", user);
         response.put("loginResponse", loginResponse);
         user_id = user.id;
+        response.put("userId", user_id);
         return ResponseEntity.ok(loginResponse);
     } else {
         // User not found, return an appropriate response
@@ -65,6 +70,14 @@ public ResponseEntity<?> loginEmployee(@RequestBody LoginDto loginDto) {
     }
 }
 
+    @GetMapping(path = "/getUser/{id}")
+    public ResponseEntity<Optional<User>> getUser(@PathVariable String id){
+
+        long int_id = Integer.parseInt(id);
+        var user = userRepository.findById(int_id);
+
+        return ResponseEntity.ok(user);
+    }
     
     @GetMapping(path = "/getUser")
     public ResponseEntity<Iterable<User>> getUsers() {
@@ -77,6 +90,25 @@ public ResponseEntity<?> loginEmployee(@RequestBody LoginDto loginDto) {
 		}
 		return null;
     }
+
+    @GetMapping(path = "/getFullName/{id}")
+    public ResponseEntity<Optional<User>> getFullName(@PathVariable String id){
+
+        long int_id = Integer.parseInt(id);
+        var user = userRepository.findById(int_id);
+
+        if(user != null){
+            return ResponseEntity.ok(user);
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+
+    public String getMethodName(@RequestParam String param) {
+        return new String();
+    }
+    
     
     @RequestMapping(method = RequestMethod.OPTIONS)
 public ResponseEntity<?> handleOptions() {

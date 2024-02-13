@@ -4,15 +4,17 @@ import React, { ChangeEvent, FormEvent, useState } from "react";
 interface RegisterProps {}
 
 const Register: React.FC<RegisterProps> = () => {
-  const [employeename, setEmployeename] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
 
   const save = async (event: FormEvent<HTMLButtonElement>) => {
     event.preventDefault();
     try {
       await axios.post("http://localhost:8081/api/v1/user/save", {
-        employeename: employeename,
+        firstName: firstName,
+        lastName: lastName,
         email: email,
         password: password,
       },
@@ -33,19 +35,27 @@ const Register: React.FC<RegisterProps> = () => {
 
           <form>
             <div className="form-group">
-              <label>Employee name</label>
+              <label>First Name</label>
               <input
-                type="text"
+                value={firstName}
                 className="form-control"
-                id="employeename"
-                placeholder="Enter Name"
-                value={employeename}
-                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  setEmployeename(event.target.value);
-                }}
+                id="firstname"
+                onChange={(e) => setFirstName(e.target.value)}
+                type='username'
+                placeholder='username'
               />
             </div>
-
+            <div className="form-group">
+              <label>Last Name</label>
+              <input
+                value={lastName}
+                className="form-control"
+                id="lastname"
+                onChange={(e) => setLastName(e.target.value)}
+                type='lastname'
+                placeholder='lastname'
+              />
+            </div>
             <div className="form-group">
               <label>Email</label>
               <input
@@ -59,7 +69,6 @@ const Register: React.FC<RegisterProps> = () => {
                 }}
               />
             </div>
-
             <div className="form-group">
               <label>Password</label>
               <input

@@ -1,7 +1,11 @@
 package com.example.demo.controllers;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,18 +114,22 @@ public class BookController {
 		
 		var book = bookRepository.findById(id_long).orElse(null);
 
-		if (book != null && (!book.isReserved || book.isBorrowed)) {
+		if (book != null && (!book.isReserved || !book.isBorrowed)) {
 			Optional<User> optionalUser = userRepository.findById(userId);
-			System.out.println("hereeee" + optionalUser);
 
 			if (optionalUser != null) {
 				User user = optionalUser.get();
 				book.userID = user;
 				book.isReserved = true;
+				book.issueDate = LocalDate.now();
 				bookRepository.save(book);
+
+				ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+            	executorService.schedule(() -> releaseReservation(book), 5, TimeUnit.MINUTES);
+
 				return ResponseEntity.ok(book);
-			} 
-		} 
+			}
+		}
 		return ResponseEntity.notFound().build();
 	}
 	
@@ -170,5 +178,12 @@ public class BookController {
 		}
 		return ResponseEntity.notFound().build();
 	}
-}
 
+	private void releaseReservation(Book book) {
+		// Update book properties to release the reservation
+		book.userID = null;
+		book.isReserved = false;
+		book.issueDate = null;
+		bookRepository.save(book);
+	}
+}

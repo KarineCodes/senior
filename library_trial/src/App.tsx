@@ -49,7 +49,7 @@ function App() {
               <Route path="/login" element={<Login setToken={setToken} />} />
             </Routes>
           </div>
-          {token && <button onClick={handleLogout}>Logout</button>}
+          {/* {token && <button onClick={handleLogout}>Logout</button>} */}
         </main>
       </BrowserRouter>
       <Footer />
