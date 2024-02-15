@@ -1,29 +1,64 @@
 import axios from "axios";
-import React, { ChangeEvent, FormEvent, useState } from "react";
+import React, { FormEvent, useState } from "react";
+import Select from "react-select";
+import CustomMultiValue from "./CustomMultiValue";
+
+enum Genre {
+  Drama = "Drama",
+  ScienceFiction = "ScienceFiction",
+  SelfHelp = "SelfHelp",
+  Thriller = "Thriller",
+}
 
 interface RegisterProps {}
 
 const Register: React.FC<RegisterProps> = () => {
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [age, setAge] = useState<number>(0);
+  const [mobile, setMobile] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+  const [preferredGenres, setPreferredGenres] = useState<Genre[]>([]);
   const [password, setPassword] = useState<string>("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [address, setAddress] = useState<string>("");
+
+  const genreOptions = Object.values(Genre).map((genre) => ({ value: genre, label: genre }));
+
 
   const save = async (event: FormEvent<HTMLButtonElement>) => {
     event.preventDefault();
+
+    // Basic front-end validation for email
+    if (email.trim() === "") {
+      alert("Please enter an email address.");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+
     try {
+      // You can directly use the preferredGenres state which is an array of Genre enum values
       await axios.post("http://localhost:8081/api/v1/user/save", {
         firstName: firstName,
         lastName: lastName,
+        age: age,
+        mobile: mobile,
         email: email,
+        preferredGenre: preferredGenres,
         password: password,
-      },
-      {
-        withCredentials:true,
+        address: address,
+      }, {
+        withCredentials: true,
       });
-      alert("Employee Registration Successfully");
+
+      alert("User registration successful");
     } catch (err) {
-      alert(err);
+      alert("Failed to register user. Please try again.");
+      console.error("Error during registration:", err);
     }
   };
 
@@ -31,7 +66,7 @@ const Register: React.FC<RegisterProps> = () => {
     <div>
       <div className="container mt-4">
         <div className="card">
-          <h1>Student Registration</h1>
+          <h1>User Registration</h1>
 
           <form>
             <div className="form-group">
@@ -39,10 +74,9 @@ const Register: React.FC<RegisterProps> = () => {
               <input
                 value={firstName}
                 className="form-control"
-                id="firstname"
                 onChange={(e) => setFirstName(e.target.value)}
-                type='username'
-                placeholder='username'
+                type="text"
+                placeholder="Enter First Name"
               />
             </div>
             <div className="form-group">
@@ -50,36 +84,71 @@ const Register: React.FC<RegisterProps> = () => {
               <input
                 value={lastName}
                 className="form-control"
-                id="lastname"
                 onChange={(e) => setLastName(e.target.value)}
-                type='lastname'
-                placeholder='lastname'
+                type="text"
+                placeholder="Enter Last Name"
+              />
+            </div>
+            <div className="form-group">
+              <label>Age</label>
+              <input
+                value={age}
+                className="form-control"
+                onChange={(e) => setAge(Number(e.target.value))}
+                type="number"
+                placeholder="Enter Age"
+              />
+            </div>
+            <div className="form-group">
+              <label>Mobile</label>
+              <input
+                value={mobile}
+                className="form-control"
+                onChange={(e) => setMobile(e.target.value)}
+                type="text"
+                placeholder="Enter Mobile"
               />
             </div>
             <div className="form-group">
               <label>Email</label>
               <input
-                type="email"
-                className="form-control"
-                id="email"
-                placeholder="Enter Email"
                 value={email}
-                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  setEmail(event.target.value);
+                className="form-control"
+                onChange={(e) => setEmail(e.target.value)}
+                type="email"
+                placeholder="Enter Email"
+              />
+            </div>
+            <div className="form-group">
+              <label>Preferred Genres</label>
+              <Select
+                isMulti
+                value={genreOptions.filter(option => preferredGenres.includes(option.value))}
+                options={genreOptions}
+                onChange={(selectedOptions) => setPreferredGenres(selectedOptions.map(option => option.value as Genre))}
+                components={{
+                  MultiValue: CustomMultiValue as React.ComponentType<any>, // Use the custom MultiValue component
                 }}
               />
             </div>
             <div className="form-group">
               <label>Password</label>
               <input
-                type="password"
-                className="form-control"
-                id="password"
-                placeholder="Enter Password"
                 value={password}
-                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  setPassword(event.target.value);
-                }}
+                className="form-control"
+                onChange={(e) => setPassword(e.target.value)}
+                type="password"
+                placeholder="Enter Password"
+              />
+            </div>
+            <div className="form-group">
+              <label>Address</label>
+              <input
+                value={address}
+                className="form-control"
+                onChange={(e) => setAddress(e.target.value)}
+                type="text"
+                placeholder="Enter Address"
               />
             </div>
 
@@ -88,7 +157,7 @@ const Register: React.FC<RegisterProps> = () => {
               className="btn btn-primary mt-4"
               onClick={save}
             >
-              Save
+              Register
             </button>
           </form>
         </div>
@@ -98,7 +167,3 @@ const Register: React.FC<RegisterProps> = () => {
 };
 
 export default Register;
-// function useState<T>(arg0: string): [any, any] {
-//     throw new Error("Function not implemented.");
-// }
-

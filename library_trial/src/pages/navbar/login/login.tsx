@@ -61,7 +61,7 @@ const Login: React.FC<LoginProps> = () => {
           placeholder='Password'
         />
         {error && <small>{error}</small>}
-        <button onClick={() => loginHandler()}>Login</button>
+        <button className = "login-btn" onClick={() => loginHandler()}>Login</button>
       </div>
     </div>
   );

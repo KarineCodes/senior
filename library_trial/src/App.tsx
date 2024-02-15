@@ -3,7 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import NavBar from "./components/navbar/NavBar";
 import Home from "./pages/navbar/home/home";
 // import Books from "./pages/navbar/books/books";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Footer from "./components/navbar/Footer";
 import NavBar2 from "./components/navbar/navBar2";
 import BookDetails from "./pages/navbar/MyBooks/BookDetails";
@@ -18,6 +18,22 @@ import Register from "./pages/navbar/login/register";
 function App() {
   const [token, setToken] = useState(localStorage.getItem("userToken") ?? null);
 
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const scrollThreshold = 100;
+
+      setIsScrolled(scrollPosition > scrollThreshold);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   const handleLogout = () => {
     // Perform any additional logout logic if needed
     setToken(null);
