@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.entities.Book;
+import com.example.demo.entities.User;
 
 @Repository
 public interface BookRepository extends CrudRepository<Book, Long>{
@@ -19,4 +20,12 @@ public interface BookRepository extends CrudRepository<Book, Long>{
 
 	@Query("SELECT b FROM Book b WHERE LOWER(b.name) LIKE LOWER(CONCAT('%', :name, '%'))")
     List<Book> searchByName(@Param("name") String name);
+
+	public List<Book> findByUserID(User user);
+
+	@Query("SELECT b FROM Book b WHERE LOWER(b.author) LIKE LOWER(CONCAT('%', :author, '%'))")
+    public Iterable<Book> searchByAuthor(String author);
+
+	// @Query("SELECT b FROM Book b WHERE LOWER(b.Genre) LIKE LOWER(CONCAT('%', :genre, '%'))")
+	// public Iterable<Book> searchByGenre(String genre);
 }

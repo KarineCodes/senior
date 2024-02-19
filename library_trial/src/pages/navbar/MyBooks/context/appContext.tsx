@@ -38,12 +38,23 @@ interface AppContextProviderProps {
 const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => {
   const [reserved, setReserved] = useState<reserved>({});
 
-  const addToReserved = (book: Book) => {
-    setReserved((prevFavorites) => ({
-      ...prevFavorites,
-      [book.id]: book,
-    }));
-  };
+  const addToReserved = (books: Book | Book[]) => {
+    setReserved((prevReserved) => {
+      const newReserved = { ...prevReserved };
+  
+      // If a single book is provided, add it to the reserved list
+      if (!Array.isArray(books)) {
+        newReserved[books.id] = books;
+      } else {
+        // If an array of books is provided, add each book to the reserved list
+        books.forEach((book) => {
+          newReserved[book.id] = book;
+        });
+      }
+  
+      return newReserved;
+    });
+  };  
 
   const removeFromReserved = (id: string) => {
     setReserved((prevFavorites) => {

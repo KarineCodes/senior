@@ -1,6 +1,7 @@
 package com.example.demo.controllers;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,8 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.Services.UserService;
 import com.example.demo.dtos.LoginDto;
 import com.example.demo.dtos.UserDto;
+import com.example.demo.entities.Book;
 import com.example.demo.entities.User;
 import com.example.demo.payloadResponse.LoginMessage;
+import com.example.demo.repositories.BookRepository;
 import com.example.demo.repositories.UserRepository;
 
 
@@ -38,6 +41,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private BookRepository bookRepository;
 
     @PostMapping(path = "/save")
     public String saveUser(@RequestBody UserDto userDto) {
@@ -104,6 +110,24 @@ public ResponseEntity<?> loginEmployee(@RequestBody LoginDto loginDto) {
         return ResponseEntity.notFound().build();
     }
 
+    	@GetMapping("/reservedBooks/{userId}")
+	public ResponseEntity<Iterable<Book>> getReservedBooks(@PathVariable String userId) {
+		try {
+			long userId_long = Long.parseLong(userId);
+
+			Optional<User> optionalUser = userRepository.findById(userId_long);
+			if (optionalUser.isPresent()) {
+				User user = optionalUser.get();
+				List<Book> reservedBooks = bookRepository.findByUserID(user);
+
+				return ResponseEntity.ok(reservedBooks);
+			} else {
+				return ResponseEntity.notFound().build();
+			}
+		} catch (NumberFormatException e) {
+			return ResponseEntity.badRequest().build();
+		}
+	}
 
     public String getMethodName(@RequestParam String param) {
         return new String();

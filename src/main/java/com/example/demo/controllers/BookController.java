@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -81,6 +82,34 @@ public class BookController {
 
 	}
 
+	// @GetMapping("/user/reservedBooks/{userId}")
+	// public ResponseEntity<Iterable<Book>> getReservedBooks(@PathVariable String userId) {
+	// 	try {
+	// 		long userId_long = Long.parseLong(userId);
+	// 		Optional<User> optionalUser = userRepository.findById(userId_long);
+	// 		if (optionalUser.isPresent()) {
+	// 			User user = optionalUser.get();
+	// 			List<Book> reservedBooks = bookRepository.findByUserID(user);
+	// 			return ResponseEntity.ok(reservedBooks);
+	// 		} else {
+	// 			return ResponseEntity.notFound().build();
+	// 		}
+	// 	} catch (NumberFormatException e) {
+	// 		return ResponseEntity.badRequest().build();
+	// 	}
+	// }
+	// @GetMapping("book/checkReserved/{id}")
+	// public ResponseEntity<Iterable<Book>> checkBookStatus(@PathVariable String id) {
+	// 	long id_long = Integer.parseInt(id);
+	// 	var book = bookRepository.findById(id_long).orElse(null);
+	// 	if(book != null)
+	// 	{
+	// 		if(!book.isReserved)
+	// 		return ResponseEntity.ok(book);
+	// 	}
+	// 	return ResponseEntity.notFound().build();
+	// }
+
 	@GetMapping(value = "/book/searchByName", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Iterable<Book>> getByName(@RequestParam String name){
 		Iterable<Book> books = bookRepository.searchByName("%" + name + "%");
@@ -91,6 +120,28 @@ public class BookController {
             return ResponseEntity.notFound().build();
         }
 	}
+
+	@GetMapping(value = "/book/author", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Iterable<Book>> getByAuthor(@RequestParam String author) {
+		Iterable<Book> books = bookRepository.searchByAuthor("%" + author + "%");
+
+        if (books != null) {
+            return ResponseEntity.ok(books);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+	}
+
+	// @GetMapping(value = "/book/genre/{genre}", produces = MediaType.APPLICATION_JSON_VALUE)
+	// public ResponseEntity<Iterable<Book>> getByGenre(@RequestParam String genre) {
+	// 	Iterable<Book> books = bookRepository.searchByGenre("%" + genre + "%");
+
+    //     if (books != null) {
+    //         return ResponseEntity.ok(books);
+    //     } else {
+    //         return ResponseEntity.notFound().build();
+    //     }
+	// }
 	
 	@PostMapping(value = "/book")
 	public ResponseEntity<Book> createBook(@RequestBody BookDto bookDto) {
@@ -103,36 +154,46 @@ public class BookController {
 	
 		return ResponseEntity.ok(BookUtils.extract(book, bookDto));
 	}
-
 	
 	@PatchMapping(value = "/book/reserve/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Book> reserveBook(@PathVariable String id){
-		
-		long userId = UserController.getUserId();
+public ResponseEntity<Book> reserveBook(@PathVariable String id) {
+    try {
+        long userId = UserController.getUserId();
+        long id_long = Integer.parseInt(id);
 
-		long id_long = Integer.parseInt(id);
-		
-		var book = bookRepository.findById(id_long).orElse(null);
+        var book = bookRepository.findById(id_long).orElse(null);
 
-		if (book != null && (!book.isReserved || !book.isBorrowed)) {
-			Optional<User> optionalUser = userRepository.findById(userId);
+        if (book != null) {
+            if (!book.isReserved && !book.isBorrowed) {
+                Optional<User> optionalUser = userRepository.findById(userId);
 
-			if (optionalUser != null) {
-				User user = optionalUser.get();
-				book.userID = user;
-				book.isReserved = true;
-				book.issueDate = LocalDate.now();
-				bookRepository.save(book);
+                if (optionalUser.isPresent()) {
+                    User user = optionalUser.get();
+                    book.userID = user;
+                    book.isReserved = true;
+                    book.issueDate = LocalDate.now();
+                    bookRepository.save(book);
 
-				ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
-            	executorService.schedule(() -> releaseReservation(book), 5, TimeUnit.MINUTES);
+                    ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+                    executorService.schedule(() -> releaseReservation(book), 5, TimeUnit.MINUTES);
 
-				return ResponseEntity.ok(book);
-			}
-		}
-		return ResponseEntity.notFound().build();
-	}
-	
+                    return ResponseEntity.ok(book);
+                } else {
+                    return ResponseEntity.notFound().build();
+                }
+            } else {
+                // Book is already reserved or borrowed
+                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            }
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    } catch (NumberFormatException e) {
+        // Handle invalid ID format
+        return ResponseEntity.badRequest().build();
+    }
+}
+
 	@PatchMapping(value = "/book/removeReserve/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Book> removeReserveBook(@PathVariable String id){
 		
@@ -143,6 +204,7 @@ public class BookController {
 		{
 			book.isReserved = false;
 			book.userID = null;
+			book.issueDate = null;
 
 			bookRepository.save(book);
 			return ResponseEntity.ok(book);

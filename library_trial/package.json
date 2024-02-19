@@ -9,6 +9,7 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@types/react-select": "^5.0.1",
         "axios": "^1.2.2",
         "formik": "^2.2.9",
         "glyphicons": "^0.2.0",
@@ -18,6 +19,7 @@
         "react-redux": "^8.0.5",
         "react-router": "^6.6.1",
         "react-router-dom": "^6.6.1",
+        "react-select": "^5.8.0",
         "react-toastify": "^9.1.1",
         "redux": "^4.2.0",
         "redux-devtools-extension": "^2.13.9",
