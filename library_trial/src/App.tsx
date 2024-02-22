@@ -13,6 +13,7 @@ import { AuthProvider } from "./pages/navbar/MyBooks/context/authContext";
 import Contact from "./pages/navbar/contact/contact";
 import Login from "./pages/navbar/login/login";
 import Register from "./pages/navbar/login/register";
+import Profile from "./pages/navbar/profile/Profile";
 
 
 function App() {
@@ -57,6 +58,7 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/bookList" element={<BookList setToken={setToken} />} />
               <Route path="/books/:id" element={<BookDetails />} />
+              <Route path="/profile/:id" element={<Profile/>}/>
               <Route path="/logout" element={<Login setToken={setToken}/>}/>
               <Route
                 path="/Reserved"

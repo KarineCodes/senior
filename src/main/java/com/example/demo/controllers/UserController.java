@@ -22,6 +22,7 @@ import com.example.demo.Services.UserService;
 import com.example.demo.dtos.LoginDto;
 import com.example.demo.dtos.UserDto;
 import com.example.demo.entities.Book;
+import com.example.demo.entities.Genre;
 import com.example.demo.entities.User;
 import com.example.demo.payloadResponse.LoginMessage;
 import com.example.demo.repositories.BookRepository;
@@ -105,6 +106,19 @@ public ResponseEntity<?> loginEmployee(@RequestBody LoginDto loginDto) {
 
         if(user != null){
             return ResponseEntity.ok(user);
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping(path = "/getGenres/{id}")
+    public ResponseEntity<List<Genre>> getGenres(@PathVariable String id){
+
+        long int_id = Integer.parseInt(id);
+        var user = userRepository.findById(int_id);
+
+        if(user != null){
+            return ResponseEntity.ok(user.get().preferredGenre);
         }
 
         return ResponseEntity.notFound().build();

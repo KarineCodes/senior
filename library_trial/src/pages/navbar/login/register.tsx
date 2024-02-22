@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { FormEvent, useState } from "react";
 import Select from "react-select";
 import CustomMultiValue from "./CustomMultiValue";
+import "./register.css";
 
 enum Genre {
   Drama = "Drama",
@@ -23,7 +24,6 @@ const Register: React.FC<RegisterProps> = () => {
   const [address, setAddress] = useState<string>("");
 
   const genreOptions = Object.values(Genre).map((genre) => ({ value: genre, label: genre }));
-
 
   const save = async (event: FormEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -125,7 +125,14 @@ const Register: React.FC<RegisterProps> = () => {
                 isMulti
                 value={genreOptions.filter(option => preferredGenres.includes(option.value))}
                 options={genreOptions}
-                onChange={(selectedOptions) => setPreferredGenres(selectedOptions.map(option => option.value as Genre))}
+                onChange={(selectedOptions) => {
+                  if (Array.isArray(selectedOptions)) {
+                    setPreferredGenres(selectedOptions.map(option => option.value as Genre));
+                  } else {
+                    // Handle the case where it's not an array (e.g., clearing all selections)
+                    setPreferredGenres([]);
+                  }
+                }}
                 components={{
                   MultiValue: CustomMultiValue as React.ComponentType<any>, // Use the custom MultiValue component
                 }}

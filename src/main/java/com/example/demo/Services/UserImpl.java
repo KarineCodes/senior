@@ -23,8 +23,8 @@ public class UserImpl implements UserService {
     public String addUser(UserDto userDto)
     {
         User user = new User(
-            userDto.id, userDto.firstName, userDto.lastName,userDto.email,
-            this.passwordEncoder.encode(userDto.password)
+            userDto.id, userDto.firstName,userDto.lastName,userDto.email,
+            this.passwordEncoder.encode(userDto.password),userDto.preferredGenre
         );
         userRepo.save(user);
         return (user.firstName + " "+ user.lastName);

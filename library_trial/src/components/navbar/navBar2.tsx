@@ -95,6 +95,8 @@ import "./NavBar.css";
         <NavLink to="/logout" className="log-out-btn-container">
         <button className="log-out-btn" onClick={()=>logOutHandler()}>Log Out</button>
         </NavLink>
+        
+        <NavLink to="/profile/:id" className="profile">Profile</NavLink>
 
         {/* <button className="log-out-btn" onClick={()=>logOutHandler()}>Log Out</button> */}
         
