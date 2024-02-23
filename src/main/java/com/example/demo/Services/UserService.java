@@ -9,4 +9,5 @@ public interface UserService {
     String addUser(UserDto userDto);
     LoginMessage loginUser(LoginDto loginDto);
     Boolean userExists(LoginDto loginDto);
+    String updateUser(UserDto userDto);
 }

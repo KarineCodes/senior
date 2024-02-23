@@ -1,5 +1,7 @@
 package com.example.demo.Services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,44 @@ public class UserImpl implements UserService {
         userRepo.save(user);
         return (user.firstName + " "+ user.lastName);
     }
+
+    @Override
+public String updateUser(UserDto userDto) {
+    // Find the existing user by ID
+    Optional<User> optionalUser = userRepo.findById(userDto.id);
+
+    if (optionalUser.isPresent()) {
+        User existingUser = optionalUser.get();
+
+        if(userDto.age != null)
+        {
+            existingUser.setAge(Integer.parseInt(userDto.age));
+        }
+
+        if(userDto.mobile != null)
+        {
+            existingUser.setMobile(userDto.mobile);
+        }
+
+        if (userDto.address != null) {
+            existingUser.setAddress(userDto.address);
+        }
+
+        if (userDto.password != null) {
+            existingUser.setPassword(passwordEncoder.encode(userDto.password));
+        }
+
+        if (userDto.preferredGenre != null) {
+            existingUser.setPreferredGenre(userDto.preferredGenre);
+        }
+
+        // Save the updated user
+        userRepo.save(existingUser);
+
+        return (existingUser.getFirstName() + " " + existingUser.getLastName() + " has been updated.");
+    }
+    return null;
+}
 
     UserDto userDto;
 

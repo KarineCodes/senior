@@ -54,46 +54,7 @@ const Profile: React.FC = () => {
 
   const genreOptions = Object.values(Genre).map((genre) => ({ value: genre, label: genre }));
 
-  const save = async (event: FormEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-
-    // Basic front-end validation for email
-    if (email.trim() === "") {
-      alert("Please enter an email address.");
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      alert("Please enter a valid email address.");
-      return;
-    }
-
-    try {
-      // You can directly use the preferredGenres state which is an array of Genre enum values
-      await axios.post(
-        "http://localhost:8081/api/v1/user/save",
-        {
-          firstName: firstName,
-          lastName: lastName,
-          age: age,
-          mobile: mobile,
-          email: email,
-          preferredGenre: preferredGenres,
-          password: password,
-          address: address,
-        },
-        {
-          withCredentials: true,
-        }
-      );
-
-      alert("User registration successful");
-    } catch (err) {
-      alert("Failed to register user. Please try again.");
-      console.error("Error during registration:", err);
-    }
-  };
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     axios
@@ -124,7 +85,35 @@ const Profile: React.FC = () => {
       .catch((err) => console.log(err));
   }, [userId]);
 
+  const update = async (event: FormEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+
+    setLoading(true);
+
+    try {
+      // You can directly use the preferredGenres state which is an array of Genre enum values
+      await axios.patch("http://localhost:8081/api/v1/user/update", {
+        id:userId,
+        age: age,
+        mobile: mobile,
+        preferredGenre: preferredGenres,
+        password: password,
+        address: address,
+      }, {
+        withCredentials: true,
+      });
+
+      alert("User update successful");
+    } catch (err) {
+      alert("Failed to update user. Please try again.");
+      console.error("Error during updating:", err);
+      setLoading(false); // Reset loading state on error
+    }
+    
+  };
+
   return (
+    <div>
     <div className="container mt-4">
       <div className="card">
         <h1>
@@ -135,21 +124,19 @@ const Profile: React.FC = () => {
           <div className="form-group">
             <label>First Name</label>
             <input
-              value={firstName}
+              value={user?.firstName || ""}
               className="form-control"
-              onChange={(e) => setFirstName(e.target.value)}
-              type="text"
-              placeholder={user?.firstName || ""}
+              readOnly
+              disabled
             />
           </div>
           <div className="form-group">
             <label>Last Name</label>
             <input
-              value={lastName}
+              value={user?.lastName || ""}
               className="form-control"
-              onChange={(e) => setLastName(e.target.value)}
-              type="text"
-              placeholder={user?.lastName || ""}
+              readOnly
+              disabled
             />
           </div>
           <div className="form-group">
@@ -175,11 +162,10 @@ const Profile: React.FC = () => {
           <div className="form-group">
             <label>Email</label>
             <input
-              value={email}
+              value={user?.email || ""}
               className="form-control"
-              onChange={(e) => setEmail(e.target.value)}
-              type="email"
-              placeholder={user?.email || ""}
+              readOnly
+              disabled
             />
           </div>
           <div className="form-group">
@@ -215,11 +201,19 @@ const Profile: React.FC = () => {
               placeholder="Enter Address"
             />
           </div>
-          <button className="btn btn-primary" onClick={save}>
-            Save
+
+          <button
+            type="submit"
+            className="btn btn-primary mt-4"
+            onClick={update}
+            disabled={loading}
+          >
+            {loading ? "Updating..." : "Update"}
           </button>
+
         </form>
       </div>
+    </div>
     </div>
   );
 };
