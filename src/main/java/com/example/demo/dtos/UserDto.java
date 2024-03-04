@@ -16,4 +16,6 @@ public class UserDto {
 	public List<Genre> preferredGenre = new ArrayList<Genre>();
 	public String password;
 	public String address;
+	public boolean isEnabled;
+	
 }

@@ -28,6 +28,10 @@ public class BookUtils {
 		{
 			original.imageUrl= dto.imageUrl;
 		}
+		if(dto.genre != null)
+		{
+			original.genre = dto.genre;
+		}
 		original.isReserved = dto.isReserved;
 		return original;
 	}

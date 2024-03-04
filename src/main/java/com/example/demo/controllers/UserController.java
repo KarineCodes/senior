@@ -1,28 +1,32 @@
 package com.example.demo.controllers;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
 
 import com.example.demo.Services.UserService;
 import com.example.demo.dtos.LoginDto;
 import com.example.demo.dtos.UserDto;
+import com.example.demo.entities.Book;
+import com.example.demo.entities.Genre;
 import com.example.demo.entities.User;
 import com.example.demo.payloadResponse.LoginMessage;
+import com.example.demo.repositories.BookRepository;
 import com.example.demo.repositories.UserRepository;
-
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173", maxAge = 3600)
@@ -36,9 +40,30 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private BookRepository bookRepository;
 
-    @PostMapping(path = "/save")
+    @PostMapping("/save")
     public String saveUser(@RequestBody UserDto userDto) {
+        // Check if the name is at least 6 characters
+        System.out.println("Save user method triggered!");
+    	if (!userService.isValidEmail(userDto.email)) {
+            return "Invalid email address";
+        }
+        if (!userService.isValidAge(Integer.parseInt(userDto.age))) {
+            return "Invalid age. It must be an integer between 15 and 80.";
+        }
+        // Check if the email already exists
+        if (userService.emailExists(userDto.email)) {
+            return "Email already exists";
+        }
+        // Check if the password meets the requirements
+        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+        if (!userDto.password.matches(passwordRegex)) {
+           return "Invalid password. Please meet the password requirements.";
+        }
+        // Save the user
         String id = userService.addUser(userDto);
         return id;
     }
@@ -54,7 +79,7 @@ public class UserController {
 public ResponseEntity<?> loginEmployee(@RequestBody LoginDto loginDto) {
     User user = userRepository.findByEmail(loginDto.email);
     // Check if the user exists
-    if (userService.userExists(loginDto)) {
+    if (userService.userExists(loginDto) && user.isEanbled == true) {
         LoginMessage loginResponse = userService.loginUser(loginDto);
         Map<String, Object> response = new HashMap<>();
         response.put("user", user);
@@ -67,6 +92,15 @@ public ResponseEntity<?> loginEmployee(@RequestBody LoginDto loginDto) {
     }
 }
     
+    @GetMapping(path = "/getUser/{id}")
+    public ResponseEntity<Optional<User>> getUser(@PathVariable String id){
+
+        long int_id = Integer.parseInt(id);
+        var user = userRepository.findById(int_id);
+
+        return ResponseEntity.ok(user);
+    }
+    
     @GetMapping(path = "/getUser")
     public ResponseEntity<Iterable<User>> getUsers() {
         		
@@ -78,6 +112,60 @@ public ResponseEntity<?> loginEmployee(@RequestBody LoginDto loginDto) {
 		}
 		return null;
     }
+
+    @GetMapping(path = "/getFullName/{id}")
+    public ResponseEntity<Optional<User>> getFullName(@PathVariable String id){
+
+        long int_id = Integer.parseInt(id);
+        var user = userRepository.findById(int_id);
+
+        if(user != null){
+            return ResponseEntity.ok(user);
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping(path = "/getGenres/{id}")
+    public ResponseEntity<List<Genre>> getGenres(@PathVariable String id){
+
+        long int_id = Integer.parseInt(id);
+        var user = userRepository.findById(int_id);
+
+        if(user != null){
+            return ResponseEntity.ok(user.get().preferredGenre);
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    	@GetMapping("/reservedBooks/{userId}")
+	public ResponseEntity<Iterable<Book>> getReservedBooks(@PathVariable String userId) {
+		try {
+			long userId_long = Long.parseLong(userId);
+
+			Optional<User> optionalUser = userRepository.findById(userId_long);
+			if (optionalUser.isPresent()) {
+				User user = optionalUser.get();
+				List<Book> reservedBooks = bookRepository.findByUserID(user);
+
+				return ResponseEntity.ok(reservedBooks);
+			} else {
+				return ResponseEntity.notFound().build();
+			}
+		} catch (NumberFormatException e) {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+
+    public String getMethodName(@RequestParam String param) {
+        return new String();
+    }
+
+        @GetMapping(value="/confirm-account")
+        public ResponseEntity<?> confirmUserAccount(@RequestParam("token")String confirmationToken) {
+            return userService.confirmEmail(confirmationToken);
+        }
     
     @RequestMapping(method = RequestMethod.OPTIONS)
 public ResponseEntity<?> handleOptions() {

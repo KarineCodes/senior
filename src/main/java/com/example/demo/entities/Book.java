@@ -1,6 +1,7 @@
 package com.example.demo.entities;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,7 +32,7 @@ public class Book {
 	public String description;
 	
 	@Column(name = "IssueDate")
-	public Date issueDate;
+	public LocalDate issueDate;
 	
 	@Column(name = "Author")
 	public String author;
@@ -51,20 +52,12 @@ public class Book {
 	@Column(name = "Genre")
 	public Genre genre;
 	
+	@ManyToOne
+	@JoinColumn(name = "user_ID")
+	public User userID;
+	
 	@Column(name = "DueDate")
 	public Date dueDate;
-	
-	@ManyToOne
-    @JoinColumn(name = "user_ID")
-    private User user;
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;;
-	}
 }
 
 

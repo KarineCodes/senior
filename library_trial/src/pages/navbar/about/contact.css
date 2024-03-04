@@ -1,0 +1,29 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.contact-container {
+    padding-left: 300px;
+    padding-right: 300px;
+    display: flex;
+  justify-content: space-around;
+  width: 1500px;
+  align-items: center;
+  height: 700px; /* Adjust as needed */
+  background-color: #fff; /* Optional background color */
+}
+
+.contact-item {
+  text-align: center;
+}
+
+.contact-item img {
+  width: 100px; /* Adjust the icon size as needed */
+  height: 80px;
+  margin-bottom: 10px;
+}
+
+.contact-item p {
+  margin: 0;
+}

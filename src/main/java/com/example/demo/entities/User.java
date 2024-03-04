@@ -47,17 +47,50 @@ public class User {
 	
 	@Column(name = "Address")
 	public String address;
+	
+	@Column(name = "isEnabled")
+	public boolean isEanbled;
+	
 
-	public User(long id, String firstName, String lastName, String email, String password)
+	public User(long id, String firstName, String lastName, String email, String password, int age, boolean isEnabled, List<Genre> genre, String address, String mobile)
 	{
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 		this.password = password;
+		this.age = age;
+		this.isEanbled = isEnabled;
+		this.preferredGenre = genre;
+		this.address = address;
+		this.mobile = mobile;
+	}
+	
+	public User(long id, String firstName, String lastName, String email, String password, int age)
+	{
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.password = password;
+		this.age = age;
+	}
+	
+	public User(String firstName, String lastName, String email, String password, int age, boolean isEnabled)
+	{
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.password = password;
+		this.age = age;
+		this.isEanbled = isEnabled;
 	}
 
     public User() {
     }
+    
 }
+
+
+
 
