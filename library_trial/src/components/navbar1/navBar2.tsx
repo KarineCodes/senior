@@ -3,7 +3,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../pages/navbar/MyBooks/context/authContext";
-import "./NavBar.css";
+import imageSrcc from './digital-library.png';
+import "./navbar2.css";
+
 // export function NavBar(){
   interface NavBar2Props {
     setToken: React.Dispatch<React.SetStateAction<string|null>>;
@@ -60,48 +62,33 @@ import "./NavBar.css";
   }
     return(
       <nav className={`navbar-container`}>
-      {/* <FaSchool className="icon"></FaSchool> */}
-      <NavLink to="/" className="nav-linkk">
-        Home
-      </NavLink>
-        <NavLink to="/contact" className="nav-linkk">
-        Contact
-        </NavLink>
-        
-        {/*  */}
-        {/* <NavLink to="/BookDetails" className="nav-linkk">
-        bookDetails
-        </NavLink> */}
-        <NavLink to="/BookList" className="nav-linkk">
-        BookList
-        </NavLink>
-        <NavLink to="/Reserved" className="nav-linkk">
-        Reserved
-        </NavLink>
-        {/*  */}
+        <div className="text-nav">
+        <img src={imageSrcc} alt="Book Library" className="home-image-nav" />
+        <p>. Book Library</p>
+        </div>
+        <div className="mainNav">
+          <NavLink to="/" className="nav-linkk">
+            Home
+            </NavLink>
+            <NavLink to="/contact" className="nav-linkk">
+            Contact
+            </NavLink>
+            <NavLink to="/BookList" className="nav-linkk">
+            BookList
+            </NavLink>
+            <NavLink to="/Reserved" className="nav-linkk">
+            Reserved
+            </NavLink>
 
-      {/* <NavLink to="/books" className="nav-link">
-        Books
-        </NavLink> */}
-        
-        {/* <div className="log-out-btn-container">
-        <button className="log-out-btn" onClick={() => logOutHandler()}>
-          Log Out
-        </button>
-      </div> */}
+            <NavLink to="/profile/:id" className="profile">{user?.firstName} {user?.lastName}</NavLink>
+          </div>
 
-        <div className="user">
-          {user?.firstName} {user?.lastName}</div>
-        <NavLink to="/logout" className="log-out-btn-container">
-        <button className="log-out-btn" onClick={()=>logOutHandler()}>Log Out</button>
-        </NavLink>
-        
-        <NavLink to="/profile/:id" className="profile">Profile</NavLink>
-
-        {/* <button className="log-out-btn" onClick={()=>logOutHandler()}>Log Out</button> */}
-        
+                    <NavLink to="/logout" className="log-out-btn-container">
+          <button className="log-out-btn" onClick={()=>logOutHandler()}>Log Out</button>
+          </NavLink>
     </nav>
     );
 };
 
 export default NavBar2
+

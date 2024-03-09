@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -175,5 +176,11 @@ public ResponseEntity<?> handleOptions() {
         // Your logic to get or calculate the userId
         return user_id;
     }
+
+        @PatchMapping(path = "/update")
+public String updateUser(@RequestBody UserDto userDto) {
+    String updatedUserName = userService.updateUser(userDto);
+    return updatedUserName;
+}
 
 }

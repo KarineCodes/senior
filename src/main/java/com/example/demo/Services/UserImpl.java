@@ -1,5 +1,6 @@
 package com.example.demo.Services;
 
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,6 +132,45 @@ public class UserImpl implements UserService {
 	     }
 	     return ResponseEntity.badRequest().body("Error: Couldn't verify email");
 	 }
+
+     @Override
+     public String updateUser(UserDto userDto) {
+         // Find the existing user by ID
+         Optional<User> optionalUser = userRepo.findById(userDto.id);
+     
+         if (optionalUser.isPresent()) {
+             User existingUser = optionalUser.get();
+     
+             if(userDto.age != null)
+             {
+                 existingUser.setAge(Integer.parseInt(userDto.age));
+             }
+     
+             if(userDto.mobile != null)
+             {
+                 existingUser.setMobile(userDto.mobile);
+             }
+     
+             if (userDto.address != null) {
+                 existingUser.setAddress(userDto.address);
+             }
+     
+             if (userDto.password != null) {
+                 existingUser.setPassword(passwordEncoder.encode(userDto.password));
+             }
+     
+             if (userDto.preferredGenre != null) {
+                 existingUser.setPreferredGenre(userDto.preferredGenre);
+             }
+     
+             // Save the updated user
+             userRepo.save(existingUser);
+     
+             return (existingUser.getFirstName() + " " + existingUser.getLastName() + " has been updated.");
+         }
+         return null;
+     }
+     
 }
 
 

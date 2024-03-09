@@ -1,0 +1,157 @@
+.footer-container {
+    display: flex;
+    justify-content: space-between; /* Arrange items horizontally */
+    align-items: center;
+    padding: 5px 10px; /* Add padding for spacing */
+  }
+  
+  .footer-item {
+    display: flex;
+    align-items: center;
+  }
+  
+  .footer-item img {
+    width: 30px;
+    height: 30px;
+    margin-right: 15px;
+  }
+  
+  .footer-rights {
+    /* background-color: #111845a6; */
+    font-size: 13px;
+    line-height: 20px;
+    color: white;
+    font-weight: 600;
+    padding: 10px 10px; /* Add padding for spacing */
+  }
+  
+
+/* .footer-container {
+   position: fixed;
+    left: 0;
+    bottom: -100px;
+    width: 100%;
+    background-color: #333;
+    color: white;
+    text-align: center;
+    transition: bottom 0.3s ease;
+    justify-content: space-evenly;
+    align-items: center;
+}
+  
+  .footer-item {
+    display: flex;
+    align-items: center;
+  }
+  
+  .footer-item img {
+    width: 30px;
+    height: 30px;
+    margin-right: 15px;
+  }
+   */
+   .footer {
+    position: fixed;
+    left: 0;
+    bottom: -100%; /* Change the initial position to hide the footer completely */
+    width: 100%;
+    background-color: white;
+    color: rgb(148, 104, 37);
+    text-align: center;
+    transition: bottom 0.3s ease; /* Smooth transition */
+    justify-content: space-between;
+    align-items: center;
+    min-height: 50px; /* Set a minimum height for the footer */
+    z-index: 999; /* Ensure the footer stays on top */
+    
+    border: solid 0.1em;
+  }
+  
+  .footer.show {
+    bottom: 0;
+  }
+  
+  
+/* .footer {
+    position: fixed;
+    left: 0;
+    bottom: -100px;
+    width: 100%;
+    background-color: #333;
+    color: white;
+    text-align: center;
+    transition: bottom 0.3s ease;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer.show {
+    bottom: 0;
+} */
+
+
+.footer-rights p{
+    /* background-color: black; */
+    font-size: 13px;
+    line-height: 15px;
+    color: rgb(148, 104, 37);
+    font-weight: 600;
+    align-items: center;
+
+}
+
+
+a{
+    color: aliceblue;
+    text-decoration: none;
+    align-items: center;
+
+}
+
+@media screen and (max-width:844px) {
+    .footer{
+    font-size: 440px;
+    line-height: 15px;
+    background-color: rgb(184, 161, 118);
+    align-items: center;
+
+}
+.footer-container {
+    display: flex;
+    justify-content: space-between; /* Arrange items horizontally */
+    align-items: center;
+    padding: 5px 10px; /* Add padding for spacing */
+  }
+}
+
+@media screen and (max-width:550px) {
+    .footer{
+    font-size: 34px;
+    line-height: 42px;
+    background-color: rgb(184, 161, 118);
+    align-items: center;
+
+}
+.footer-container {
+    display: flex;
+    justify-content: space-between; /* Arrange items horizontally */
+    align-items: center;
+    padding: 5px 10px; /* Add padding for spacing */
+  }
+}
+
+@media screen and (max-width:400px) {
+    .footer{
+    font-size: 27px;
+    background-color: rgb(184, 161, 118);
+    line-height: 38px;
+    align-items: center;
+
+}
+.footer-container {
+    display: flex;
+    justify-content: space-between; /* Arrange items horizontally */
+    align-items: center;
+    padding: 5px 10px; /* Add padding for spacing */
+  }
+}

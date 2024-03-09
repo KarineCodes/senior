@@ -7,17 +7,20 @@
   }
 }
 
-.div {
+/* .div {
   padding-top: 1000px;
+} */
+.base_list{
+  background-color: #F6EEE2;
 }
-
 .book-list {
   min-height: 100px;
-  width: 80%;
-  margin-left: 125px;
-  display: grid;
+  width: 100%;
+  /* margin-left: 125px;  */
+  display: grid; 
   grid-template-columns: repeat(3, 1fr);
-  justify-items: center;
+  justify-items:center;
+  align-content: space-between;
 }
 
 .favorites-container {
@@ -32,14 +35,14 @@
   justify-items: center;
 }
 
-img {
+.list_img {
   height: 400px;
   width: 300px;
   transition: all 0.3s ease;
 }
 
-img:hover {
-  transform: scale(1.1);
+.list_img:hover {
+  /* transform: scale(1.1); */
 }
 
 .book {
@@ -48,12 +51,19 @@ img:hover {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 20px 0px;
+  /* border: #333 solid 0.4rem; */
+   margin: 30px 0px; 
+   
+   border: solid 0.4rem #903F11;
+   background-color: #903F11;
 }
 
+.book h4{
+  color:#F6EEE2;
+}
 .button-fav {
   padding: 10px;
-  background-color: rgb(26,132,128);
+  background-color: #903F11;
   color: white;
   width: 300px;
   font-size: 20px;
@@ -66,7 +76,7 @@ img:hover {
   font-size: 24px; /* Adjust this value to increase or decrease the size */
   padding: 5px; /* Optional: Add padding for better appearance */
   text-decoration: none;
-  color: rgb(26,132,128); /* Optional: Customize the color */
+  color: #903F11; /* Optional: Customize the color */
   transition: font-size 0.3s ease; /* Optional: Add transition effect */
 }
 
@@ -88,9 +98,13 @@ h1 {
   width: 0px;
   display: flex;
   align-items:center;
-  justify-content: space-between;
+  justify-content:space-between;
   padding: 20px;
   animation: autoOpen 2s ease forwards; /* Added animation for auto-opening */
+  
+  /* margin-bottom: 10rem; */
+  /* justify-content: center; */
+  
 }
 
 .book-details > div {
@@ -108,6 +122,7 @@ h1 {
 .book-description h2 {
   font-size: 30px;
   margin-bottom: 10px;
+  
 }
 
 .book-description p {
@@ -124,6 +139,7 @@ h1 {
 .book-details h2 {
   font-size: 36px;
   margin-bottom: 20px;
+  /* align-items: center; */
 }
 
 @media (max-width: 768px) {
@@ -155,6 +171,10 @@ h1 {
   transition: all 0.5s linear;
   left: 350px;
   top: 50px;
+
+  /* margin-bottom: 10rem; */
+  justify-content: center;
+  align-self: center;
 }
 
 .cover, .page {
@@ -276,6 +296,8 @@ h1 {
     width: 50%;
     float: right;
     padding: 0 0 0px 4px;
+    margin-bottom: 5rem;
+    justify-content: center;
   }
 }
 
@@ -304,9 +326,9 @@ h1 {
   }
 }
 
-body { 
+/* body { 
   background-color: #939393; 
-}
+} */
 
 *, *:before, *:after { 
   box-sizing: border-box; 
@@ -320,27 +342,66 @@ body {
   width: 400px;
 }
 
-.navbar-form {
-  margin-top: 100px;
+.searchbar-form {
+  /* margin-top: 100px; */
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  margin-left: 250px;
+  justify-content: center;
+  align-self: center;
+  margin-left: 9rem;
   width:800px;
   height: 40px;
+  padding-top: 4rem;
+  padding-bottom: 3rem;
 }
 
-.navbar-form input {
+.searchbar-form input {
   margin-right: 10px;
-  padding: 5px; /* Adjust padding to control the height of the input */
+  padding: 1.5rem; /* Adjust padding to control the height of the input */
   width: 9000px; /* Set the desired width of the input */
   font-size: 14px; /* Set the font size */
   height: 40px;
 }
 
-.navbar-form button {
-  padding: 5px 10px; /* Adjust padding to control the size of the button */
+.search-form button {
+  padding: 1rem 1rem; /* Adjust padding to control the size of the button */
   font-size: 14px; /* Set the font size */
   width: 150px;
-  height: 35px;
+  height: 50px;
+  justify-content: center;
+  align-content: center;
+  margin-left: 1rem;
+  border: solid 0.1rem;
 }
+.SELECT_SEARCH{
+  padding: 1rem 1rem; /* Adjust padding to control the size of the button */
+  font-size: 14px; /* Set the font size */
+  width: 300px;
+  height: 50px;
+  justify-content: center;
+  align-content: center;
+  margin-left: 1rem;
+  border: solid 0.1rem;
+
+}
+  .text-book{
+    margin-top: 15rem;
+    border-radius: 1rem;
+    border: solid #92684F;
+    width: 30rem;
+    text-align: center;
+    color: rgb(185, 95, 95);
+  }
+
+  .btn-primary {
+    /* padding: 10px 20px; */
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: white;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .btn-primary:hover {
+    /* background-color: rgb(215,190,171); */
+    color: #903F11;
+  }

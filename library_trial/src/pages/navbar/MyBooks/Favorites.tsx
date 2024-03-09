@@ -6,55 +6,65 @@ import { useAppContext } from "./context/appContext";
 import { useAuth } from "./context/authContext";
 
 interface FavoritesProps {
-  setToken: React.Dispatch<React.SetStateAction<string|null>>;
+  setToken: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const Favorites: React.FC<FavoritesProps> = ({ setToken }) => {
-  const { reserved, addToReserved, removeFromReserved } = useAppContext()|| { reserved: {}, addToReserved: () => {}, removeFromReserved: () => {} };
+  const { reserved, addToReserved, removeFromReserved } = useAppContext() || { reserved: {}, addToReserved: () => {}, removeFromReserved: () => {} };
   const navigate = useNavigate();
-  const {userId, isLoggedIn} = useAuth();
+  const { userId, isLoggedIn } = useAuth();
+  console.log("userID:", userId);
 
-// Example API call in the frontend 
-const fetchReservedBooks = async (userId: string | null) => {
-  try {
-    if (isLoggedIn && userId) {
-      const response = await fetch(`http://localhost:8081/api/v1/user/reservedBooks/${userId}`);
-      const data = await response.json();
-      addToReserved(data);
-    } else {
-      // Handle missing details
+  const fetchReservedBooks = async (userId: string | null) => {
+    try {
+      if (isLoggedIn && userId) {
+        console.log("Fetching reserved books...");
+        const response = await axios.get(`http://localhost:8081/api/v1/user/reservedBooks/${userId}`);
+
+        if (response.status === 200) {
+          const data = response.data;
+          addToReserved(data);
+          console.log("Data received from the server:", data);
+        } else {
+          console.error('API Error:', response.statusText);
+          // Handle non-200 status code
+        }
+      } else {
+        console.log("Not logged in or missing user ID");
+      }
+    } catch (error) {
+      console.error('API Error:', error);
+      // Handle other errors (e.g., network issues)
     }
-  } catch (error) {
-    console.error('API Error:', error);
-    // Handle API error
-  }
-};
+  };
 
-// Example usage (assuming userId is available in the component state or context)
-useEffect(() => {
-  fetchReservedBooks(userId);
-}, [isLoggedIn, userId]);
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchReservedBooks(userId);
+      console.log("Updated reserved state:", reserved); // Log the updated reserved state here
+    };
 
+    fetchData();
+  }, [isLoggedIn, userId, addToReserved]);
 
-const logOutHandler = () => {
-  setToken("");
-  localStorage.clear();
-  navigate('/login');
-}
-const handleUndoReserve = async (bookId: string) => {
-  try {
-    const response = await fetch(`http://localhost:8081/book/removeReserve/${bookId}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-  } catch (error) {
-    console.error('API Error:', error);
-  }
-};
+  const logOutHandler = () => {
+    setToken("");
+    localStorage.clear();
+    navigate('/login');
+  };
 
-// export function Reserve() {
+  const handleUndoReserve = async (bookId: string) => {
+    try {
+      const response = await fetch(`http://localhost:8081/book/removeReserve/${bookId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    } catch (error) {
+      console.error('API Error:', error);
+    }
+  };
 
   const reservedChecker = (id: string) => {
     return reserved[id] !== undefined;
@@ -65,26 +75,23 @@ const handleUndoReserve = async (bookId: string) => {
       alert('This book is already reserved. You cannot reserve it again.');
     } else {
       try {
-        // Check if the book is already reserved on the server-side
         const response = await axios.get(`http://localhost:8081/book/${book.id}`);
         if (response.data.reserved) {
           alert('This book is already reserved. You cannot reserve it again.');
         } else {
           const reserveResponse = await axios.patch(`http://localhost:8081/book/reserve/${book.id}`);
           console.log('Reservation response:', reserveResponse.data);
-  
-          // Only add to reserved state if the reservation is successful
+
           if (reserveResponse.status === 200) {
             addToReserved(book);
           }
         }
       } catch (error) {
         console.error('API Error:', error);
-        // Handle error (e.g., show a user-friendly error message)
       }
     }
   };
-  
+
   return (
     <div className="favorites-container">
       <div className="favorites">
@@ -128,12 +135,6 @@ const handleUndoReserve = async (bookId: string) => {
       </div>
     </div>
   );
-  
-}
+};
 
 export default Favorites;
-
-function setBooks(data: any) {
-  throw new Error("Function not implemented.");
-}
-

@@ -19,7 +19,7 @@ interface BookProps {
 const BookList: React.FC<BookProps> = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [filterBy, setFilterBy] = useState<string>('name'); // Default filter criteria
+  const [filterBy, setFilterBy] = useState<string>('all'); // Default filter criteria
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,18 +31,22 @@ const BookList: React.FC<BookProps> = () => {
         setLoading(true);
         let apiUrl;
 
-        switch (filterBy) {
-          case 'name':
-            apiUrl = `http://localhost:8081/book/searchByName?name=${searchQuery}`;
-            break;
-          case 'author':
-            apiUrl = `http://localhost:8081/book/author?author=${searchQuery}`;
-            break;
-          case 'genre':
-            apiUrl = `http://localhost:8081/book/searchByGenre?genre=${searchQuery}`;
-            break;
-          default:
-            throw new Error('Invalid filter criteria');
+        if (filterBy === 'all') {
+          apiUrl = "http://localhost:8081/bookget";
+        } else {
+          switch (filterBy) {
+            case 'name':
+              apiUrl = `http://localhost:8081/book/searchByName?name=${searchQuery}`;
+              break;
+            case 'author':
+              apiUrl = `http://localhost:8081/book/author?author=${searchQuery}`;
+              break;
+            case 'genre':
+              apiUrl = `http://localhost:8081/book/searchByGenre?genre=${searchQuery}`;
+              break;
+            default:
+              throw new Error('Invalid filter criteria');
+          }
         }
 
         const response = await axios.get(apiUrl);
@@ -64,22 +68,21 @@ const BookList: React.FC<BookProps> = () => {
   };
 
   return (
-    <>
-      <div className="navbar-form">
+    <div className="base_list">
+      <div className="searchbar-form">
         <input
           type="text"
           placeholder="Search books..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <select value={filterBy} onChange={handleFilterChange}>
+        <span className="glyphicon glyphicon-search"></span>
+        <select className="SELECT_SEARCH" value={filterBy} onChange={handleFilterChange}>
+          <option value="all">All</option>
           <option value="name">Name</option>
           <option value="author">Author</option>
           <option value="genre">Genre</option>
         </select>
-        <button type="submit" name="submit" className="btn btn-primary">
-          <span className="glyphicon glyphicon-search"></span>
-        </button>
       </div>
       {loading && <p>Loading...</p>}
       {error && <p className="error-message">{error}</p>}
@@ -90,12 +93,12 @@ const BookList: React.FC<BookProps> = () => {
               <h4>{book.name}</h4>
             </div>
             <div>
-              <img src={book.imageUrl} alt="#" onClick={() => navigate(`/books/${book.id}`)} />
+              <img className="list_img" src={book.imageUrl} alt="#" onClick={() => navigate(`/books/${book.id}`)} />
             </div>
           </div>
         ))}
       </div>
-    </>
+    </div>
   );
 };
 

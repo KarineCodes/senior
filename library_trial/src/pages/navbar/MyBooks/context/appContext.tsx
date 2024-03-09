@@ -1,34 +1,39 @@
-
+// appContext.tsx
 import React, { createContext, ReactNode, useContext, useState } from "react";
 
 interface Book {
-  [x: string]: string | undefined;
   id: string;
   name: string;
-  imageUrl:string
+  imageUrl: string;
   // Add other properties if needed
 }
 
-interface reserved {
-  [key: string]: Book; // Adjust the type according to your requirement
+interface Reserved {
+  [key: string]: Book;
 }
 
 interface ContextProps {
-  reserved: reserved;
-  addToReserved: (book: Book) => void;
+  reserved: Reserved;
+  addToReserved: (books: Book | Book[]) => void;
   removeFromReserved: (id: string) => void;
 }
 
-const AppContext = createContext<ContextProps | null>(null);
+const defaultValue: ContextProps = {
+  reserved: {},
+  addToReserved: () => {},
+  removeFromReserved: () => {},
+};
 
-export const useAppContext = () => {
+const AppContext = createContext<ContextProps>(defaultValue);
+
+export const useAppContext = (): ContextProps => {
   const context = useContext(AppContext);
 
-  if (context === undefined) {
-    throw new Error("Appcontext must be within AppContextProvider");
+  if (!context) {
+    console.error("useAppContext must be used within AppContextProvider");
   }
 
-  return context;
+  return context || defaultValue;
 };
 
 interface AppContextProviderProps {
@@ -36,31 +41,29 @@ interface AppContextProviderProps {
 }
 
 const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => {
-  const [reserved, setReserved] = useState<reserved>({});
+  const [reserved, setReserved] = useState<Reserved>({}); // Add setReserved state
 
   const addToReserved = (books: Book | Book[]) => {
     setReserved((prevReserved) => {
       const newReserved = { ...prevReserved };
-  
-      // If a single book is provided, add it to the reserved list
+
       if (!Array.isArray(books)) {
         newReserved[books.id] = books;
       } else {
-        // If an array of books is provided, add each book to the reserved list
         books.forEach((book) => {
           newReserved[book.id] = book;
         });
       }
-  
+
       return newReserved;
     });
-  };  
+  };
 
   const removeFromReserved = (id: string) => {
-    setReserved((prevFavorites) => {
-      const newFavorites = { ...prevFavorites };
-      delete newFavorites[id];
-      return newFavorites;
+    setReserved((prevReserved) => {
+      const newReserved = { ...prevReserved };
+      delete newReserved[id];
+      return newReserved;
     });
   };
 

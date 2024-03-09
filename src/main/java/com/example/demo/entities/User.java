@@ -88,6 +88,11 @@ public class User {
 
     public User() {
     }
+
+    public User orElse(Object object) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'orElse'");
+    }
     
 }
 

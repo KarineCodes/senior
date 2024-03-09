@@ -17,5 +17,6 @@ public interface UserService {
 	boolean isValidEmail(String email);
     ResponseEntity<?> confirmEmail(String confirmationToken);
 	User getUserByEmail(String email);
-	
+    String updateUser(UserDto userDto);
+
 }
