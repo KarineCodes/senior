@@ -20,12 +20,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
+import { AuthProvider } from './pages/navbar/MyBooks/context/authContext';
 import { TokenProvider } from './pages/navbar/login/TokenContext';
 
 ReactDOM.render(
   <React.StrictMode>
     <TokenProvider>
+      <AuthProvider>
       <App />
+      </AuthProvider>
     </TokenProvider>
   </React.StrictMode>,
   document.getElementById('root')

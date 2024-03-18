@@ -1,7 +1,9 @@
 package com.example.demo.controllers;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -194,6 +196,77 @@ public ResponseEntity<Book> reserveBook(@PathVariable String id) {
     }
 }
 
+// @PatchMapping(value = "/book/borrow/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+// public ResponseEntity<Book> borrowBook(@PathVariable String id) {
+//     try {
+//         long userId = UserController.getUserId();
+//         long id_long = Integer.parseInt(id);
+//         var book = bookRepository.findById(id_long).orElse(null);
+//         if (book != null) {
+//             if (!book.isReserved && !book.isBorrowed) {
+//                 Optional<User> optionalUser = userRepository.findById(userId);
+//                 if (optionalUser.isPresent()) {
+//                     User user = optionalUser.get();
+//                     book.userID = user;
+//                     book.isReserved = true;
+//                     book.issueDate = LocalDate.now();
+//                     bookRepository.save(book);
+//                     return ResponseEntity.ok(book);
+//                 } else {
+//                     return ResponseEntity.notFound().build();
+//                 }
+//             } else {
+//                 // Book is already reserved or borrowed
+//                 return ResponseEntity.status(HttpStatus.CONFLICT).build();
+//             }
+//         } else {
+//             return ResponseEntity.notFound().build();
+//         }
+//     } catch (NumberFormatException e) {
+//         // Handle invalid ID format
+//         return ResponseEntity.badRequest().build();
+//     }
+// }
+
+@PatchMapping(value = "/book/borrow/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+public ResponseEntity<List<Book>> borrowBooks(@RequestBody List<String> ids, @PathVariable String userId) {
+    try {
+        long userId_long = Long.parseLong(userId);
+        Optional<User> optionalUser = userRepository.findById(userId_long);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            List<Book> borrowedBooks = new ArrayList<>();
+
+            for (String id : ids) {
+                long id_long = Long.parseLong(id);
+                var book = bookRepository.findById(id_long).orElse(null);
+
+                if (book != null && !book.isReserved && !book.isBorrowed) {
+                    book.userID = user;
+                    book.isBorrowed=true;
+                    book.setIssueDate(LocalDate.now());
+                    bookRepository.save(book);
+                    borrowedBooks.add(book);
+					ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+                    executorService.schedule(() -> releaseBorrow(book), 1, TimeUnit.MINUTES);
+                } else {
+                    // Book is already reserved or borrowed
+                    return ResponseEntity.status(HttpStatus.CONFLICT).build();
+                }
+            }
+            return ResponseEntity.ok(borrowedBooks);
+        } else {
+            // User not found
+            return ResponseEntity.notFound().build();
+        }
+    } catch (NumberFormatException e) {
+        // Handle invalid ID format
+        return ResponseEntity.badRequest().build();
+    }
+}
+
+
 	@PatchMapping(value = "/book/removeReserve/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Book> removeReserveBook(@PathVariable String id){
 		
@@ -211,16 +284,19 @@ public ResponseEntity<Book> reserveBook(@PathVariable String id) {
 		}
 		return ResponseEntity.notFound().build();
 	}
-	
-	@PatchMapping(value = "/book/borrow/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Book> borrowBook(@PathVariable String id){
+
+	@PatchMapping(value = "/book/removeBorrow/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Book> removeBorrowBook(@PathVariable String id){
 		
 		long id_long = Integer.parseInt(id);
 		var book = bookRepository.findById(id_long).orElse(null);
 
 		if(book != null)
 		{
-			book.isBorrowed = true;
+			book.isBorrowed = false;
+			book.userID = null;
+			book.issueDate = null;
+
 			bookRepository.save(book);
 			return ResponseEntity.ok(book);
 		}
@@ -245,6 +321,13 @@ public ResponseEntity<Book> reserveBook(@PathVariable String id) {
 		// Update book properties to release the reservation
 		book.userID = null;
 		book.isReserved = false;
+		book.issueDate = null;
+		bookRepository.save(book);
+	}
+
+	private void releaseBorrow(Book book){
+		book.userID = null;
+		book.isBorrowed = false;
 		book.issueDate = null;
 		bookRepository.save(book);
 	}
