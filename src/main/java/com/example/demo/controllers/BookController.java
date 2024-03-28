@@ -134,6 +134,18 @@ public class BookController {
         }
 	}
 
+	
+	@GetMapping(value = "/book/barcode/{barcode}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Iterable<Book>> getByBarcode(@PathVariable String barcode) {
+		Iterable<Book> books = bookRepository.findByBarcode(barcode);
+
+        if (books != null) {
+            return ResponseEntity.ok(books);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+	}
+
 	// @GetMapping(value = "/book/genre/{genre}", produces = MediaType.APPLICATION_JSON_VALUE)
 	// public ResponseEntity<Iterable<Book>> getByGenre(@RequestParam String genre) {
 	// 	Iterable<Book> books = bookRepository.searchByGenre("%" + genre + "%");

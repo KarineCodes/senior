@@ -20,6 +20,10 @@ public class BookUtils {
 		{
 			original.description = dto.description;
 		}
+		if(dto.barcode != null)
+		{
+			original.barcode = dto.barcode;
+		}
 		if(dto.author!= null)
 		{
 			original.author= dto.author;

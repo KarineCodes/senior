@@ -27,14 +27,12 @@ const Favorites: React.FC<FavoritesProps> = ({ setToken }) => {
           console.log("Data received from the server:", data);
         } else {
           console.error('API Error:', response.statusText);
-          // Handle non-200 status code
         }
       } else {
         console.log("Not logged in or missing user ID");
       }
     } catch (error) {
       console.error('API Error:', error);
-      // Handle other errors (e.g., network issues)
     }
   };
 

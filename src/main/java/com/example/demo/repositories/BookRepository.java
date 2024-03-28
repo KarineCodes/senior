@@ -16,6 +16,7 @@ public interface BookRepository extends CrudRepository<Book, Long>{
 
 	public List<Book> findByIsReserved(boolean isReserved);
 	public List<Book> findByDescription(String description);
+	public List<Book> findByBarcode(String barcode);
 	public Optional<Book> findById(Long id);
 
 	@Query("SELECT b FROM Book b WHERE LOWER(b.name) LIKE LOWER(CONCAT('%', :name, '%'))")

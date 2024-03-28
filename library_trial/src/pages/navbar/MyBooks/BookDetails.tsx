@@ -45,7 +45,6 @@ const handleApiCall = async (bookId: string, userId: string | null) => {
         // Check if the book is already reserved by another user in the API response
         const updatedBook = response.data;
         if (updatedBook.isReserved && updatedBook.reservedBy == !userId) {
-          console.log("helo");
           setErrorMessage("Book is already reserved by another user");
         } else {
           addToReserved(updatedBook);
