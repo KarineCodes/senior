@@ -113,10 +113,24 @@ const handleApiCall = async (bookId: string, userId: string | null) => {
             <img src={book.imageUrl} alt={book.name} />
           </div>
           <div className="page">
-            <h2>{book.name}</h2>
           </div>
           <div className="page">
-            <p>{book.description}</p>
+          </div>
+          <div className="page">
+          </div>
+          <div className="page">
+          </div>
+          <div className="page">
+          </div>
+          <div className="page">
+          </div>
+          <div className="page">
+          </div>
+          <div className="page">
+          </div>
+          <div className="page">
+          </div>
+          <div className="page">
           </div>
         </div>
         <div className="buttons">
